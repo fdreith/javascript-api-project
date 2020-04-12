@@ -10,12 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_12_030431) do
+ActiveRecord::Schema.define(version: 2020_04_12_032128) do
 
   create_table "moods", force: :cascade do |t|
     t.string "mood_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "prompts", force: :cascade do |t|
+    t.string "question"
+    t.integer "mood_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["mood_id"], name: "index_prompts_on_mood_id"
   end
 
 end
