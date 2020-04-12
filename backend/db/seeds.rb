@@ -41,7 +41,8 @@ happy.prompts.create([
   {content: "What invention are you truly grateful for having access to?"},
   {content: "What is something you love doing for/giving to others?"},
   {content: "What are 5 positive memories from this past year?"},
-  {content: "Think of one person who has enriched your life this year in some way. What are 3 positive contributions they’ve made to your life?"}
+  {content: "Think of one person who has enriched your life this year in some way. What are 3 positive contributions they’ve made to your life?"},
+  {content: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
 
@@ -69,7 +70,8 @@ sad.prompts.create([
   {content: "What are 3 good decisions you’ve made this year?"},
   {content: "Think of a grateful moment you shared with someone this month."},
   {content: "Who would you like to say “thank you” to? What would you thank them for?"},
-  {content: "What struggle are you thankful for having made it through (even if you’re not thankful for the struggle itself)?"}
+  {content: "What struggle are you thankful for having made it through (even if you’re not thankful for the struggle itself)?"},
+  {content: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
 reflect.prompts.create([
@@ -88,7 +90,8 @@ reflect.prompts.create([
   {content: "What’s surprised you the most about your life or life in general?"},
   {content: "Write about a time when work felt real to you, necessary and satisfying. Paid or unpaid, professional or domestic, physical or mental."},
   {content: "What do you wish others would know about you."}
-  {content: "Make a list of 15 things that make you smile."}
+  {content: "Make a list of 15 things that make you smile."},
+  {content: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
 esteem.prompts.create([
@@ -100,7 +103,8 @@ esteem.prompts.create([
   {content: "What are you really good at?"},
   {content: "I feel my best when..."},
   {content: "When is it that you trust yourself and your intuition. Write about a time that you trusted yourself and/or your intuition."},
-  {content: "I can begin to separate my negative self talk by... "}
+  {content: "I can begin to separate my negative self talk by... "},
+  {content: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
 
