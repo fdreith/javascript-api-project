@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: MyText
+  minutes: MyString
+  mood: one
+  prompt: one
+
+two:
+  content: MyText
+  minutes: MyString
+  mood: two
+  prompt: two

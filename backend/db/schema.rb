@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_12_032128) do
+ActiveRecord::Schema.define(version: 2020_04_12_172301) do
+
+  create_table "entries", force: :cascade do |t|
+    t.text "content"
+    t.string "minutes"
+    t.integer "mood_id", null: false
+    t.integer "prompt_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["mood_id"], name: "index_entries_on_mood_id"
+    t.index ["prompt_id"], name: "index_entries_on_prompt_id"
+  end
 
   create_table "moods", force: :cascade do |t|
     t.string "mood_type"
@@ -26,4 +37,6 @@ ActiveRecord::Schema.define(version: 2020_04_12_032128) do
     t.index ["mood_id"], name: "index_prompts_on_mood_id"
   end
 
+  add_foreign_key "entries", "moods"
+  add_foreign_key "entries", "prompts"
 end
