@@ -13,7 +13,7 @@ sad = Mood.create( mood_type: "Sad/Depressed")
 reflect = Mood.create( mood_type: "Self-Reflective")
 esteem = Mood.create( mood_type: "Low Self-Esteem")
 
-inspired.prompts.create([
+inspired_prompts = inspired.prompts.create([
   {question: "Write about someone who ispires you, and what it is about them that inspires you."},
   {question: "What is something you would like to change about your life? What are the steps that you would need to take to achieve that goal?"},
   {question: "What are some positive changes you have made recently? What changes would you like to make next?"},
@@ -106,6 +106,8 @@ esteem.prompts.create([
   {question: "I can begin to separate my negative self talk by... "},
   {question: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
+
+Entry.create(content: "My mom inspires me.", minutes: "1", prompt_id: inspired_prompts.first.id, mood_id: inspired.id)
 
 
 
