@@ -5,3 +5,4 @@ class Prompt {
     this.mood = data.mood
     this.minutes = data.minutes
   }
+}
