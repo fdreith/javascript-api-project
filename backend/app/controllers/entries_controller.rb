@@ -4,8 +4,7 @@ class EntriesController < ApplicationController
   # GET /entries
   def index
     @entries = Entry.all
-
-    render json: @entries, include: :prompt#, include: :mood I'd like to include mood - how?
+    render json: @entries, include: [:prompt, :mood], except: [:mood_id, :prompt_id]
   end
 
   # GET /entries/1
