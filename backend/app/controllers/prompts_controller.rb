@@ -5,7 +5,7 @@ class PromptsController < ApplicationController
   def index
     @prompts = Prompt.all
 
-    render json: @prompts
+    render json: @prompts, include: :mood
   end
 
   # GET /prompts/1
