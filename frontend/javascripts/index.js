@@ -5,12 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   prompt.addEventListener("click", e => {
     getPrompt(e.target.name)
-    //   (e.target.name === "inspired-button")
-    // e.target.name === "happy-button"
-    // e.target.name === "anxious-button"
-    // e.target.name === "sad-button"
-    // e.target.name === "reflective-button"
-    // e.target.name === "self-esteem-button"
   })
 
   function getEntries() {
@@ -59,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getPrompt(promptType) {
-    debugger
     fetch('http://localhost:3000/prompts/')
       .then(function (response) {
         if (response.status !== 200) {
@@ -75,24 +68,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderPrompt(promptType) {
-    console.log(prompts)
-    prompt.innerHTML = prompts[Math.floor(Math.random() * prompts.length)]
+    let targetPrompts = prompts.filter(prompt => prompt.mood_id.toString() === promptType)
     debugger
+    prompt.innerHTML = targetPrompts.random().question
+    renderNotepad()
   }
 
+  function renderNotepad() {
+    console.log("notepad")
+  }
 
-
-
-  // <h6>How are you feeling today? Select an emotion for a writing prompt.</h6>
-  //   <br>
-  //     <a class="waves-effect waves-light btn-large" id="inspired-button">Inspired</a>
-  //     <a class="waves-effect waves-light btn-large" id="happy-button">Happy</a>
-  //     <a class="waves-effect waves-light btn-large" id="anxious-button">Anxious</a>
-  //     <a class="waves-effect waves-light btn-large" id="sad-button">Sad</a>
-  //     <a class="waves-effect waves-light btn-large" id="reflective-button">Reflective</a>
-  //     <a class="waves-effect waves-light btn-large" id="self-esteem-button">Self-Esteem</a>
-
-
-  // load 
+  Array.prototype.random = function () {
+    return this[Math.floor((Math.random() * this.length))];
+  }
 
 })
