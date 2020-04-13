@@ -32,7 +32,7 @@ inspired_prompts = inspired.prompts.create([
 
 ])
 
-happy.prompts.create([
+happy_prompts = happy.prompts.create([
   {question: "What went well today? Can you think of five things?"},
   {question: "What habit (or habits) are you grateful for keeping up with?"},
   {question: "What element of nature did you enjoy this week?"},
@@ -46,7 +46,7 @@ happy.prompts.create([
 ])
 
 
-anxious.prompts.create([
+anxious_prompts = anxious.prompts.create([
   {question: "What was the most difficult experience you had before, and how were you able to overcome it?"},
   {question: "List three things that scare you the most, and the reasons why."},
   {question: "Reply to your inner critic’s opinions about your actions and decisions."},
@@ -61,7 +61,7 @@ anxious.prompts.create([
   {question: "Visualize that you are free from anxiety. Write down the details of this kind of life."}
 ])
 
-sad.prompts.create([
+sad_prompts = sad.prompts.create([
   {question: "What’s one thing someone helped you with this week?"},
   {question: "What element of nature did you enjoy this week?"},
   {question: "What positive changes are you grateful for having made in your life?"},
@@ -74,7 +74,7 @@ sad.prompts.create([
   {question: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
-reflect.prompts.create([
+reflect_prompts = reflect.prompts.create([
   {question: "What have been the things in my life that I can accomplished that I am most proud of? What is it about those accomplishments that I am most proud of?"},
   {question: "If your house burned to the ground, what are the top 1–3 things you would want to save? (not including people — assume your family is outside already)"},
   {question: "What is your favorite song/musical piece and why?"},
@@ -94,7 +94,7 @@ reflect.prompts.create([
   {question: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
-esteem.prompts.create([
+esteem_prompts = esteem.prompts.create([
   {question: "What makes you unique?"},
   {question: "Make a list of your best character traits."},
   {question: "Write your body a letter thanking it for all it does for you."},
@@ -107,7 +107,12 @@ esteem.prompts.create([
   {question: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
-Entry.create(content: "My mom inspires me.", minutes: "1", prompt_id: inspired_prompts.first.id, mood_id: inspired.id)
+Entry.create(content: "My mom inspires me.", minutes: "1", prompt_id: inspired_prompts.first.id)
+Entry.create(content: "1: Breakfast, 2:Decent communte, 3: Made my deadline, 4: Got to see my best friend.", minutes: "1", prompt_id: happy_prompts.first.id)
+Entry.create(content: "When my friend died it gave me perspect on....", minutes: "1", prompt_id: anxious_prompts.first.id)
+Entry.create(content: "My neighbor helped me weed the garden.", minutes: "1", prompt_id: sad_prompts.first.id)
+Entry.create(content: "What makes anyone unique?", minutes: "1", prompt_id: esteem_prompts.first.id)
+Entry.create(content: "Such and such project I did for the community.", minutes: "1", prompt_id: reflect_prompts.first.id)
 
 
 
