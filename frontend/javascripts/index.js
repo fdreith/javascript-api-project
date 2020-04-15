@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", init)
 const promptDiv = document.getElementById("prompt-div")
+const entriesDiv = document.getElementById("entries-div")
+
 
 function init() {
   getEntries()
@@ -7,6 +9,7 @@ function init() {
 }
 
 function getPromptCategories() {
+  // can I, should I, put this in a service class? 
   promptDiv.innerHTML = `  
     <div id="prompt-buttons">
       <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
@@ -20,7 +23,10 @@ function getPromptCategories() {
       </div>
     `
   const promptButtons = document.getElementById("prompt-buttons")
-  promptButtons.addEventListener("click", e => getPrompt(e.target.id))
+  promptButtons.addEventListener("click", e => {
+    e.preventDefault()
+    getPrompt(e.target.id)
+  })
 }
 
 
@@ -51,13 +57,23 @@ function sortEntries(entries) {
 }
 
 function renderEntries(entries) {
+  entriesDiv.innerHTML = ""
   entries.forEach(entry => renderEntryCard(entry))
 }
 
 function renderEntryCard(entry) {
-  const entriesDiv = document.getElementById("entries-div")
   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
+  setTimeout(addDeleteButtonListeners(), 5)
 }
+
+function addDeleteButtonListeners() {
+  let deleteButtons = document.querySelectorAll(".material-icons right")
+  for (let i = 0; i < deleteButtons.length; i++) {
+    debugger
+    deleteButtons[i].addEventListener("click", deleteEntry)
+  }
+}
+
 
 function getPrompt(promptType) {
   fetch('http://localhost:3000/prompts/')
@@ -71,7 +87,7 @@ function getPrompt(promptType) {
       let prompts = data.map(prompt => new Prompt(prompt))
       randomPrompt(prompts, promptType)
     })
-    .catch(errors => console.log(errors)) // do something with this?
+    .catch(alert)
 }
 
 function randomPrompt(prompts, promptType) {
@@ -107,7 +123,7 @@ function addPromptFormListener() {
 }
 
 function createEntry(e) {
-  e.preventDefault
+  e.preventDefault()
   const content = document.getElementById("content").value
   const prompt_id = parseInt(document.getElementById("prompt-id").value)
   const minutes = "n/a for now"
@@ -119,6 +135,8 @@ function createEntry(e) {
     }
   }
 
+  // getting a failed fetch error when it is sucessful
+  //preventDefault - add 
   fetch('http://localhost:3000/entries/', {
     method: "POST",
     headers: {
@@ -129,14 +147,31 @@ function createEntry(e) {
   })
     .then(resp => resp.json())
     .then(responseJSON => {
-      debugger
       if (responseJSON.error) {
         throw new Error(responseJSON.error)
       } else {
-        getEntries()
+        init()
       }
     })
-    .catch(alert)
+  // .catch(alert)
+}
+
+
+function deleteEntry(id) {
+  debugger
+  e.preventDefault
+  fetch(`http://localhost:3000/entries/${id}`, {
+    method: "DELETE",
+  })
+    .then(resp => {
+      if (resp.ok) {
+        getEntries()
+      } else {
+        throw new Error(responseJSON.error)
+      }
+    })
+  // .catch(alert)
+
 }
 
 Array.prototype.random = function () {
