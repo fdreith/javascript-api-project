@@ -8,23 +8,27 @@ function init() {
 
 function getPromptCategories() {
   promptDiv.innerHTML = `  
-    <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
-    <br>
-    <a class="waves-effect waves-light btn-large" name="1">Inspired</a>
-    <a class="waves-effect waves-light btn-large" name="2">Happy</a>
-    <a class="waves-effect waves-light btn-large" name="3">Anxious</a>
-    <a class="waves-effect waves-light btn-large" name="4">Sad</a>
-    <a class="waves-effect waves-light btn-large" name="5">Reflective</a>
-    <a class="waves-effect waves-light btn-large" name="6">Self-Esteem</a>
+    <div id="prompt-buttons">
+      <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
+      <br>
+      <a class="waves-effect waves-light btn-large" id="1">Inspired</a>
+      <a class="waves-effect waves-light btn-large" id="2">Happy</a>
+      <a class="waves-effect waves-light btn-large" id="3">Anxious</a>
+      <a class="waves-effect waves-light btn-large" id="4">Sad</a>
+      <a class="waves-effect waves-light btn-large" id="5">Reflective</a>
+      <a class="waves-effect waves-light btn-large" id="6">Self-Esteem</a>
+      </div>
     `
-  promptDiv.addEventListener("click", e => getPrompt(e.target.name))
+  const promptButtons = document.getElementById("prompt-buttons")
+  promptButtons.addEventListener("click", e => getPrompt(e.target.id))
 }
+
 
 function getEntries() {
   fetch(`http://localhost:3000/entries`)
     .then(function (response) {
       if (response.status !== 200) {
-        throw new Error(response.statusText) // do something with this?
+        throw new Error(response.statusText)
       }
       return response.json()
     })
@@ -33,7 +37,7 @@ function getEntries() {
       sortEntries(entries)
       renderEntries(entries)
     })
-    .catch(errors => console.log(errors)) // do something with this?
+    .catch(alert)
 }
 
 function sortEntries(entries) {
@@ -105,13 +109,16 @@ function addPromptFormListener() {
 function createEntry(e) {
   e.preventDefault
   const content = document.getElementById("content").value
-  const prompt_id = document.getElementById("prompt-id").value
+  const prompt_id = parseInt(document.getElementById("prompt-id").value)
+  const minutes = "n/a for now"
   const entryData = {
     entry: {
       content,
-      prompt_id
+      prompt_id,
+      minutes
     }
   }
+
   fetch('http://localhost:3000/entries/', {
     method: "POST",
     headers: {
@@ -122,6 +129,7 @@ function createEntry(e) {
   })
     .then(resp => resp.json())
     .then(responseJSON => {
+      debugger
       if (responseJSON.error) {
         throw new Error(responseJSON.error)
       } else {
