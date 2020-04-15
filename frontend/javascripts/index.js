@@ -73,21 +73,62 @@ function getPrompt(promptType) {
 function randomPrompt(prompts, promptType) {
   let targetPrompts = prompts.filter(prompt => prompt.mood.id.toString() === promptType)
   let randomPrompt = targetPrompts.random()
-  renderPrompt(randomPrompt)
+  renderNewEntryForm(randomPrompt)
 }
 
-function renderPrompt(randomPrompt) {
+function renderNewEntryForm(randomPrompt) {
+  promptDiv.innerHTML = `
+      <div>
+        <h4 id="prompt">${randomPrompt.question}</h4>
+      </div>
+      <div id="prompt-form" class="row">
+      <form class="prompt-form" id="new-entry-form">
+        <div class="row">
+          <div class="input-field prompt-form">
+            <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
+            <label for="textarea1">Journal Entry</label>
+            <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
+            <input type="submit" name="" value="Finished with Entry">
+          </div>
+        </div>
+      </form>
+    </div>
+    `
+  addPromptFormListener()
+}
+
+function addPromptFormListener() {
   const promptForm = document.getElementById("prompt-form")
-  promptDiv.insertAdjacentHTML('beforeend', randomPrompt.renderPromptForm())
-  // promptDiv.innerHTML = randomPrompt.renderPromptForm()
   promptForm.addEventListener("submit", createEntry)
 }
 
 function createEntry(e) {
-  console.log("submited")
-  debugger
-  e.preventDefault()
-
+  e.preventDefault
+  const content = document.getElementById("content").value
+  const prompt_id = document.getElementById("prompt-id").value
+  const entryData = {
+    entry: {
+      content,
+      prompt_id
+    }
+  }
+  fetch('http://localhost:3000/entries/', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(entryData)
+  })
+    .then(resp => resp.json())
+    .then(responseJSON => {
+      if (responseJSON.error) {
+        throw new Error(responseJSON.error)
+      } else {
+        getEntries()
+      }
+    })
+    .catch(alert)
 }
 
 Array.prototype.random = function () {
