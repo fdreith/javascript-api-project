@@ -34,7 +34,11 @@ class EntriesController < ApplicationController
 
   # DELETE /entries/1
   def destroy
-    @entry.destroy
+    if @entry.destroy
+      render json: {message: "Entry Destroyed."}, status: :ok
+    else
+      render json: {message: "Entry Failed To Destroy."}, status: :unprocessable_entity
+    end
   end
 
   private
