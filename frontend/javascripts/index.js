@@ -26,7 +26,6 @@ function getPromptCategories() {
       </div>
     `
   const promptButtons = document.getElementById("prompt-buttons")
-  debugger
   promptButtons.addEventListener("click", e => {
     e.preventDefault()
     getPrompt(e.target.id)
@@ -178,7 +177,7 @@ function attachMoodListener() {
   dropdownOptions.addEventListener("click", getEntriesByMood)
 }
 
-function getEntriesByMood(e) { // WORKING ON THIS!!!
+function getEntriesByMood(e) {
   e.preventDefault
   fetch(`http://localhost:3000/moods/${e.target.id}`)
     .then(function (response) {
@@ -188,16 +187,25 @@ function getEntriesByMood(e) { // WORKING ON THIS!!!
       return response.json()
     })
     .then(function (data) {
-      let mood = data.map(thisMood => new Mood(thisMood))
+      debugger
+      let mood = new Mood(data)
       renderMoodEntries(mood)
     })
   // .catch(alert)
 }
 
-function renderMoodEntries() {
+function renderMoodEntries(mood) { // WORKING ON THIS!!!
   debugger
+  entriesDiv.innerHTML = ""
+  mood.entries.forEach(entry => renderEntryCard(entry))
+  addDeleteButtonListeners()
+
 
 }
+
+// function renderEntryCard(entry) {
+//   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
+// }
 
 
 // RANDOM ARRAY FUNCTION
