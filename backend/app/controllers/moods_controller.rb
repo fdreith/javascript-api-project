@@ -5,7 +5,7 @@ class MoodsController < ApplicationController
   def index
     @moods = Mood.all
 
-    render json: @moods, include: :prompts
+    render json: @moods, include: [:prompts, :entries]
   end
 
   # GET /moods/1
