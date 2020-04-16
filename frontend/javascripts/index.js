@@ -6,6 +6,7 @@ const entriesDiv = document.getElementById("entries-div")
 function init() {
   getEntries()
   getPromptCategories()
+  M.AutoInit();
 }
 
 function getPromptCategories() {
@@ -59,19 +60,27 @@ function sortEntries(entries) {
 function renderEntries(entries) {
   entriesDiv.innerHTML = ""
   entries.forEach(entry => renderEntryCard(entry))
+  addDeleteButtonListeners()
+
 }
 
 function renderEntryCard(entry) {
   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
-  setTimeout(addDeleteButtonListeners(), 5)
 }
 
 function addDeleteButtonListeners() {
-  let deleteButtons = document.querySelectorAll(".material-icons right")
+  let deleteButtons = document.querySelectorAll(".delete-div button")
   for (let i = 0; i < deleteButtons.length; i++) {
-    debugger
-    deleteButtons[i].addEventListener("click", deleteEntry)
+    deleteButtons[i].addEventListener("click", e => {
+      console.log("clicked")
+      // deleteEntry())
+    })
+
   }
+}
+
+function filterEntries() {
+  filter - entries - buttons
 }
 
 
@@ -135,8 +144,6 @@ function createEntry(e) {
     }
   }
 
-  // getting a failed fetch error when it is sucessful
-  //preventDefault - add 
   fetch('http://localhost:3000/entries/', {
     method: "POST",
     headers: {
@@ -158,7 +165,7 @@ function createEntry(e) {
 
 
 function deleteEntry(id) {
-  debugger
+
   e.preventDefault
   fetch(`http://localhost:3000/entries/${id}`, {
     method: "DELETE",
