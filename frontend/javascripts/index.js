@@ -6,7 +6,8 @@ const entriesDiv = document.getElementById("entries-div")
 function init() {
   getEntries()
   getPromptCategories()
-  M.AutoInit();
+  $('.dropdown-trigger').dropdown();
+  // attachMoodListener()
 }
 
 function getPromptCategories() {
@@ -44,7 +45,7 @@ function getEntries() {
       sortEntries(entries)
       renderEntries(entries)
     })
-    .catch(alert)
+  // .catch(alert)
 }
 
 function sortEntries(entries) {
@@ -68,14 +69,23 @@ function renderEntryCard(entry) {
   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
 }
 
+function attachMoodListener() {
+
+  $('.dropdown-trigger').dropdown('onCloseStart');
+  //   const filterDrop = document.getElementById("filter-dropdown")
+  //   filterDrop.addEventListener("submit", getEntriesByMood)
+  // }
+
+  // function getEntriesByMood(e) {
+  //   e.preventDefault
+  //   debugger
+}
+
 function addDeleteButtonListeners() {
+
   let deleteButtons = document.querySelectorAll(".delete-div button")
   for (let i = 0; i < deleteButtons.length; i++) {
-    deleteButtons[i].addEventListener("click", e => {
-      console.log("clicked")
-      // deleteEntry())
-    })
-
+    deleteButtons[i].addEventListener("click", deleteEntry)
   }
 }
 
@@ -164,10 +174,9 @@ function createEntry(e) {
 }
 
 
-function deleteEntry(id) {
-
+function deleteEntry(e) {
   e.preventDefault
-  fetch(`http://localhost:3000/entries/${id}`, {
+  fetch(`http://localhost:3000/entries/${e.target.id}`, {
     method: "DELETE",
   })
     .then(resp => {
