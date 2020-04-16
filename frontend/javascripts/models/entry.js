@@ -6,7 +6,7 @@ class Entry {
     // this.mood = this.findMood(data)
     this.minutes = data.minutes
     this.content = data.content
-    this.created_at = data.created_at // want to modify how this looks date and time 
+    this.created_at = new Date(data.created_at)
   }
 
   renderEntry() {// need to make mood show
@@ -17,7 +17,7 @@ class Entry {
             <i id="${this.id}" class = "material-icons right">close</i></button>
       </div>
       <div class="card-content">
-        <strong>${this.created_at}</strong> 
+        <strong>Written on ${this.created_at} at ${this.created_at.getHours()}:${this.created_at.getMinutes()}</strong> 
         <br>
         <strong> ${this.prompt.question}</strong>
         <br>
