@@ -20,8 +20,8 @@ class Entry {
     return `
     <div class="card">
       <div class="delete-div">
-         <button class = "btn-flat waves-effect waves-teal disabled">
-            <i id="${this.id}" class = "material-icons right">close</i></button></td>
+         <button class = "btn-flat waves-effect waves-teal right">
+            <i id="${this.id}" class = "material-icons right">close</i></button>
       </div>
       <div class="card-content">
         <strong>${this.created_at}</strong> 
