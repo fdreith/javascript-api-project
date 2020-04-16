@@ -1,20 +1,13 @@
 class Entry {
 
-  // static all = []
-
   constructor(data) {
     this.id = data.id
-    this.prompt = data.prompt
-    this.mood = data.mood
+    this.prompt = this.findPrompt(data)
+    // this.mood = this.findMood(data)
     this.minutes = data.minutes
     this.content = data.content
     this.created_at = data.created_at // want to modify how this looks date and time 
-    // this.save()
   }
-
-  // save() {
-  //   Entry.all.push(this)
-  // }
 
   renderEntry() {
     return `
@@ -34,5 +27,13 @@ class Entry {
       </div>
     </div>
     `
+  }
+
+  findPrompt(data) {
+    if (!!data.prompt) {
+      return data.prompt
+    } else {
+      return Prompt.all.find(prompt => prompt.id === data.prompt_id)
+    }
   }
 }
