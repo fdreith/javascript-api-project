@@ -4,12 +4,28 @@ const entriesDiv = document.getElementById("entries-div")
 
 function init() {
   getPromptCategories()
+  getPrompts()
   getEntries()
   $('.dropdown-trigger').dropdown();
   attachMoodListener()
 }
 
 // PROMPTS
+
+function getPrompts() {
+  fetch('http://localhost:3000/prompts/')
+    .then(function (response) {
+      if (response.status !== 200) {
+        throw new Error(response.statusText)
+      }
+      return response.json()
+    })
+    .then(function (data) {
+      let prompts = data.map(prompt => new Prompt(prompt))
+
+    })
+  // .catch(alert)
+}
 
 function getPromptCategories() {
   // can I, should I, put this in a service class? 
@@ -28,26 +44,27 @@ function getPromptCategories() {
   const promptButtons = document.getElementById("prompt-buttons")
   promptButtons.addEventListener("click", e => {
     e.preventDefault()
-    getPrompt(e.target.id)
+    randomPrompt(e.target.id)
   })
 }
 
-function getPrompt(promptType) {
-  fetch('http://localhost:3000/prompts/')
-    .then(function (response) {
-      if (response.status !== 200) {
-        throw new Error(response.statusText)
-      }
-      return response.json()
-    })
-    .then(function (data) {
-      let prompts = data.map(prompt => new Prompt(prompt))
-      randomPrompt(prompts, promptType)
-    })
-    .catch(alert)
-}
+// function getPrompt(promptType) {
+//   fetch('http://localhost:3000/prompts/')
+//     .then(function (response) {
+//       if (response.status !== 200) {
+//         throw new Error(response.statusText)
+//       }
+//       return response.json()
+//     })
+//     .then(function (data) {
+//       let prompts = data.map(prompt => new Prompt(prompt))
+//       randomPrompt(prompts, promptType)
+//     })
+//   // .catch(alert)
+// }
 
-function randomPrompt(prompts, promptType) {
+function randomPrompt(promptType) {
+  debugger
   let targetPrompts = prompts.filter(prompt => prompt.mood.id.toString() === promptType)
   let randomPrompt = targetPrompts.random()
   renderNewEntryForm(randomPrompt)
@@ -187,24 +204,31 @@ function getEntriesByMood(e) {
       return response.json()
     })
     .then(function (data) {
-      debugger
-      let mood = new Mood(data)
-      renderMoodEntries(mood)
+      // let mood = new Mood(data)
+      // renderMoodEntries(mood)
+      let entries = data.entries.map(entry => new Entry(entry))
+      sortEntries(entries)
+      renderEntries(entries)
+
     })
   // .catch(alert)
 }
 
-function renderMoodEntries(mood) { // WORKING ON THIS!!!
-  debugger
-  entriesDiv.innerHTML = ""
-  mood.entries.forEach(entry => renderEntryCard(entry))
-  addDeleteButtonListeners()
+// function renderMoodEntries(mood) {
+//   entriesDiv.innerHTML = `<h4>${mood.mood_type}</h4>`
+//   mood.entries.forEach(entry => renderMoodEntryCard(entry))
+// }
 
-
-}
-
-// function renderEntryCard(entry) {
+// function renderMoodEntryCard(entry) {// WORKING ON THIS!!!
+//   debugger
 //   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
+//   addDeleteButtonListeners()
+// }
+
+
+
+// function renderMoodEntryCard(entry) {
+//   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderMoodEntry())
 // }
 
 
