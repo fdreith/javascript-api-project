@@ -10,7 +10,7 @@ class MoodsController < ApplicationController
 
   # GET /moods/1
   def show
-    render json: @mood, include: :prompts
+    render json: @mood, include: [:prompts, :entries]
   end
 
   # POST /moods
