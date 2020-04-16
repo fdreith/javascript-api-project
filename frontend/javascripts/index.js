@@ -3,8 +3,8 @@ const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
 
 function init() {
-  getEntries()
   getPromptCategories()
+  getEntries()
   $('.dropdown-trigger').dropdown();
   attachMoodListener()
 }
@@ -26,6 +26,7 @@ function getPromptCategories() {
       </div>
     `
   const promptButtons = document.getElementById("prompt-buttons")
+  debugger
   promptButtons.addEventListener("click", e => {
     e.preventDefault()
     getPrompt(e.target.id)
@@ -177,7 +178,7 @@ function attachMoodListener() {
   dropdownOptions.addEventListener("click", getEntriesByMood)
 }
 
-function getEntriesByMood(e) {
+function getEntriesByMood(e) { // WORKING ON THIS!!!
   e.preventDefault
   fetch(`http://localhost:3000/moods/${e.target.id}`)
     .then(function (response) {
@@ -187,15 +188,16 @@ function getEntriesByMood(e) {
       return response.json()
     })
     .then(function (data) {
-      debugger
-      let entries = data.map(entry => new Entry(entry))
-      sortEntries(entries)
-      renderEntries(entries)
+      let mood = data.map(thisMood => new Mood(thisMood))
+      renderMoodEntries(mood)
     })
   // .catch(alert)
 }
 
+function renderMoodEntries() {
+  debugger
 
+}
 
 
 // RANDOM ARRAY FUNCTION
