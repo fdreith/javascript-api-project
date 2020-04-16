@@ -9,7 +9,7 @@ class Entry {
     this.created_at = data.created_at // want to modify how this looks date and time 
   }
 
-  renderEntry() {
+  renderEntry() {// need to make mood show
     return `
     <div class="card">
       <div class="delete-div">
@@ -21,7 +21,7 @@ class Entry {
         <br>
         <strong> ${this.prompt.question}</strong>
         <br>
-        <p>${this.mood}</p>
+        <p>${this.mood}</p> 
         <br>
         <p>${this.content}</p>
       </div>
