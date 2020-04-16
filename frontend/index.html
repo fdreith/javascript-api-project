@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mindful Journal</title>
 
+  <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+    integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
 
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -30,55 +32,72 @@
     </div>
     <div id="journal-entries">
       <h5>Journal Entries:</h5>
-      <div id="filter-entries-buttons">
-        <!-- <h6>Filter Entries By Mood:</h6>
-        <br>
-        <a class="waves-effect waves-light btn-small" id="1">Inspired</a>
-        <a class="waves-effect waves-light btn-small" id="2">Happy</a>
-        <a class="waves-effect waves-light btn-small" id="3">Anxious</a>
-        <a class="waves-effect waves-light btn-small" id="4">Sad</a>
-        <a class="waves-effect waves-light btn-small" id="5">Reflective</a>
-        <a class="waves-effect waves-light btn-small" id="6">Self-Esteem</a> -->
-        <!-- Dropdown Trigger -->
-        <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Filter Entries By Mood</a>
-        <!-- Dropdown Structure -->
-        <ul id='dropdown1' class='dropdown-content'>
-          <li><a href="#!">Inspired</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">Happy</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">Anxious</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">Sad</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">Reflective</a></li>
-          <li class="divider" tabindex="-1"></li>
-          <li><a href="#!">Self-Esteem</a></li>
-        </ul>
-      </div>
-
-      <!-- <form class="filter-entries-form">
-        <div class="browser-default">
-          <select>
-            <option value="" disabled selected>Choose your option</option>
-            <option value="1">Inspired</option>
-            <option value="2">Happy</option>
-            <option value="3">Anxious</option>
-            <option value="4">Sad</option>
-            <option value="5">Reflective</option>
-            <option value="6">Self Esteem</option>
-          </select>
-          <label>Materialize Select</label>
-        </div>
-      </form> -->
-      <div id="entries-div">
-
-      </div>
+      <!-- <div id="filter-entries">
+        <form id="filter-radio-buttons">
+          <p>
+            <label>
+              <input name="Inspired" type="radio" />
+              <span>Inspired</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="Happy" type="radio" />
+              <span>Happy</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="Anxious" type="radio" />
+              <span>Happy</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="Sad" type="radio" />
+              <span>Inspired</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="Reflective" type="radio" />
+              <span>Happy</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input name="Self-Esteem" type="radio" />
+              <span>Inspired</span>
+            </label>
+          </p>
+        </form> -->
+      <!-- Dropdown Trigger-->
+      <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>Filter Entries By Mood</a>
+      <!---Dropdown Structure -->
+      <ul id='dropdown1' class='dropdown-content'>
+        <li><a href="#!">Inspired</a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a href="#!">Happy</a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a href="#!">Anxious</a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a href="#!">Sad</a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a href="#!">Reflective</a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a href="#!">Self-Esteem</a></li>
+      </ul>
     </div>
 
-    <script src="javascripts/models/entry.js"></script>
-    <script src="javascripts/models/prompt.js"></script>
-    <script defer src="javascripts/index.js"></script>
+
+    <div id="entries-div">
+
+    </div>
+  </div>
+
+  <script src="javascripts/models/entry.js"></script>
+  <script src="javascripts/models/prompt.js"></script>
+  <script defer src="javascripts/index.js"></script>
 
   </div>
 
