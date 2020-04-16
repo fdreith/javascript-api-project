@@ -17,12 +17,12 @@ class Entry {
             <i id="${this.id}" class = "material-icons right">close</i></button>
       </div>
       <div class="card-content">
-        <strong>Written on ${this.created_at} at ${this.created_at.getHours()}:${this.created_at.getMinutes()}</strong> 
+        <strong>Written on ${this.created_at.toDateString()} at ${this.created_at.getHours()}:${this.created_at.getMinutes()}</strong> 
+        <br>
+        <p>Mood: ${this.mood}</p> 
         <br>
         <strong> ${this.prompt.question}</strong>
-        <br>
-        <p>${this.mood}</p> 
-        <br>
+        <br><br>
         <p>${this.content}</p>
       </div>
     </div>
