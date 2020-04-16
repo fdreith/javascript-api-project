@@ -48,24 +48,8 @@ function getPromptCategories() {
   })
 }
 
-// function getPrompt(promptType) {
-//   fetch('http://localhost:3000/prompts/')
-//     .then(function (response) {
-//       if (response.status !== 200) {
-//         throw new Error(response.statusText)
-//       }
-//       return response.json()
-//     })
-//     .then(function (data) {
-//       let prompts = data.map(prompt => new Prompt(prompt))
-//       randomPrompt(prompts, promptType)
-//     })
-//   // .catch(alert)
-// }
-
 function randomPrompt(promptType) {
-  debugger
-  let targetPrompts = prompts.filter(prompt => prompt.mood.id.toString() === promptType)
+  let targetPrompts = Prompt.all.filter(prompt => prompt.mood.id === parseInt(promptType))
   let randomPrompt = targetPrompts.random()
   renderNewEntryForm(randomPrompt)
 }
@@ -204,8 +188,6 @@ function getEntriesByMood(e) {
       return response.json()
     })
     .then(function (data) {
-      // let mood = new Mood(data)
-      // renderMoodEntries(mood)
       let entries = data.entries.map(entry => new Entry(entry))
       sortEntries(entries)
       renderEntries(entries)
@@ -213,24 +195,6 @@ function getEntriesByMood(e) {
     })
   // .catch(alert)
 }
-
-// function renderMoodEntries(mood) {
-//   entriesDiv.innerHTML = `<h4>${mood.mood_type}</h4>`
-//   mood.entries.forEach(entry => renderMoodEntryCard(entry))
-// }
-
-// function renderMoodEntryCard(entry) {// WORKING ON THIS!!!
-//   debugger
-//   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
-//   addDeleteButtonListeners()
-// }
-
-
-
-// function renderMoodEntryCard(entry) {
-//   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderMoodEntry())
-// }
-
 
 // RANDOM ARRAY FUNCTION
 
