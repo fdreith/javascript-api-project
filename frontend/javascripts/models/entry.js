@@ -28,6 +28,8 @@ class Entry {
         <br>
         <strong> ${this.prompt.question}</strong>
         <br>
+        <p>${this.mood}</p>
+        <br>
         <p>${this.content}</p>
       </div>
     </div>
