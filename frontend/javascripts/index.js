@@ -201,7 +201,7 @@ function startTimer() {
   timer = document.getElementById("timer")
   time = setInterval(function () {
     timer.innerText++
-  }, 1000)
+  }, 6000)
 }
 
 function addEntryFormListener() {
