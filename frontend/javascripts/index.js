@@ -24,7 +24,7 @@ function getPrompts() {
       let prompts = data.map(prompt => new Prompt(prompt))
 
     })
-  // .catch(alert)
+    .catch(alert)
 }
 
 function getPromptCategories() {
@@ -74,7 +74,7 @@ function getEntries() {
       sortEntries(entries)
       renderEntries(entries)
     })
-  // .catch(alert)
+    .catch(alert)
 }
 
 function sortEntries(entries) {
@@ -127,17 +127,21 @@ function addDeleteButtonListeners() {
 
 function deleteEntry(e) {
   e.preventDefault
-  fetch(`http://localhost:3000/entries/${e.target.id}`, {
-    method: "DELETE",
-  })
-    .then(resp => {
-      if (resp.ok) {
-        getEntries()
-      } else {
-        throw new Error(responseJSON.error)
-      }
+  if (window.confirm("Are you sure you want to delete this entry?")) {
+    fetch(`http://localhost:3000/entries/${e.target.id}`, {
+      method: "DELETE",
     })
-  // .catch(alert)
+      .then(resp => resp.json())
+      .then(responseJSON => {
+        if (responseJSON.message) {
+          alert(responseJSON.message)
+          getEntries()
+        } else {
+          throw new Error(responseJSON.errors) // change other responseJSON.errorsssss
+        }
+      })
+      .catch(alert)
+  }
 }
 
 function createEntry(e) {
@@ -162,13 +166,13 @@ function createEntry(e) {
   })
     .then(resp => resp.json())
     .then(responseJSON => {
-      if (responseJSON.error) {
-        throw new Error(responseJSON.error)
+      if (responseJSON.errors) {
+        throw new Error(responseJSON.errors)
       } else {
         init()
       }
     })
-  // .catch(alert)
+    .catch(alert)
 }
 
 // MOOD
@@ -193,7 +197,7 @@ function getEntriesByMood(e) {
       renderEntries(entries)
 
     })
-  // .catch(alert)
+    .catch(alert)
 }
 
 // RANDOM ARRAY FUNCTION
