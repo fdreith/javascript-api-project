@@ -88,9 +88,17 @@ function sortEntries(entries) {
 }
 
 function renderEntries(entries) {
-  entriesDiv.innerHTML = ""
-  entries.forEach(entry => renderEntryCard(entry))
-  addDeleteButtonListeners()
+  if (entries.every(entry => entry.prompt.mood_id === entries[0].prompt.mood_id)) {
+
+    entriesDiv.insertAdjacentHTML('beforebegin', `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`)
+    entries.forEach(entry => renderEntryCard(entry))
+    addDeleteButtonListeners()
+
+  } else {
+    entriesDiv.innerHTML = "" /// clears the entriesDiv
+    entries.forEach(entry => renderEntryCard(entry))
+    addDeleteButtonListeners()
+  }
 }
 
 function renderEntryCard(entry) {
@@ -137,7 +145,7 @@ function deleteEntry(e) {
           alert(responseJSON.message)
           getEntries()
         } else {
-          throw new Error(responseJSON.errors) // change other responseJSON.errorsssss
+          throw new Error(responseJSON.errors)
         }
       })
       .catch(alert)
