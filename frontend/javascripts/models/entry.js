@@ -9,7 +9,7 @@ class Entry {
     this.created_at = new Date(data.created_at)
   }
 
-  renderEntry() {// need to make mood show
+  renderEntry() {
     return `
     <div class="card">
       <div class="delete-div">

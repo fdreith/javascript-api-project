@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", init)
+
 const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
 const journalEntriesDiv = document.getElementById("journal-entries")
@@ -7,10 +8,8 @@ function init() {
   getPrompts()
   getMoods()
   getPromptCategories()
-  // $('.dropdown-trigger').dropdown()
   pastEntriesButton()
 }
-
 
 // PROMPTS
 
@@ -29,9 +28,8 @@ function getPrompts() {
     .catch(alert)
 }
 
-
 function getPromptCategories() {
-  // can I, should I, put this in a service class? 
+  // should I, put this in a service class? OR// programatically add these!
   promptDiv.innerHTML = `  
     <div id="prompt-buttons">
     <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
@@ -57,12 +55,12 @@ function randomPrompt(promptType) {
   renderNewEntryForm(randomPrompt)
 }
 
-
 // ENTERIES
 
 function pastEntriesButton() {
   journalEntriesDiv.innerHTML = `
-  <a class="waves-effect waves-light btn-large center" id="get-past-entries">Read Past Journal Entries</a>
+  <br>
+  <a class="waves-effect waves-light btn-large center-align" id="get-past-entries">Read Past Journal Entries</a>
   `
   attachPastEntriesListener()
 }
@@ -74,10 +72,10 @@ function attachPastEntriesListener() {
 
 function appendEntriesDivs(e) {
   e.preventDefault
-  journalEntriesDiv.innerHTML = `<h5>Journal Entries:</h5>
-  <!-- Dropdown Trigger-->
+  // programatically add these
+  journalEntriesDiv.innerHTML = `
+  <h5>Journal Entries:</h5>
   <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
-  <!---Dropdown Structure -->
   <ul id='dropdown1' class='dropdown-content'>
   <li><a href="#!" id="all">All Entries</a></li>
   <li class="divider" tabindex="-1"></li>
@@ -92,7 +90,8 @@ function appendEntriesDivs(e) {
   <li><a href="#!" id="5">Reflective</a></li>
   <li class="divider" tabindex="-1"></li>
   <li><a href="#!" id="6">Self-Esteem</a></li>
-  </ul>`
+  </ul>
+  `
   getEntries()
   attachMoodListener()
   $('.dropdown-trigger').dropdown()
@@ -221,7 +220,8 @@ function createEntry(e) {
       if (responseJSON.errors) {
         throw new Error(responseJSON.errors)
       } else {
-        init()
+        getPromptCategories()
+        getEntries()
       }
     })
     .catch(alert)
