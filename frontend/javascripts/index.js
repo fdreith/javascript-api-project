@@ -1,19 +1,16 @@
 document.addEventListener("DOMContentLoaded", init)
 const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
+const journalEntriesDiv = document.getElementById("journal-entries")
 
 function init() {
   getPrompts()
   getMoods()
   getPromptCategories()
   $('.dropdown-trigger').dropdown()
-  attachMoodListener()
-  // secondInit()
+  pastEntriesButton()
 }
 
-// function secondInit() {
-//   getEntries()
-// }
 
 // PROMPTS
 
@@ -36,16 +33,16 @@ function getPrompts() {
 function getPromptCategories() {
   // can I, should I, put this in a service class? 
   promptDiv.innerHTML = `  
-  <div id="prompt-buttons">
-      <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
-      <br>
-      <a class="waves-effect waves-light btn-large" id="1">Inspired</a>
-      <a class="waves-effect waves-light btn-large" id="2">Happy</a>
-      <a class="waves-effect waves-light btn-large" id="3">Anxious</a>
-      <a class="waves-effect waves-light btn-large" id="4">Sad</a>
-      <a class="waves-effect waves-light btn-large" id="5">Reflective</a>
-      <a class="waves-effect waves-light btn-large" id="6">Self-Esteem</a>
-      </div>
+    <div id="prompt-buttons">
+    <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
+    <br>
+    <a class="waves-effect waves-light btn-large" id="1">Inspired</a>
+    <a class="waves-effect waves-light btn-large" id="2">Happy</a>
+    <a class="waves-effect waves-light btn-large" id="3">Anxious</a>
+    <a class="waves-effect waves-light btn-large" id="4">Sad</a>
+    <a class="waves-effect waves-light btn-large" id="5">Reflective</a>
+    <a class="waves-effect waves-light btn-large" id="6">Self-Esteem</a>
+    </div>
     `
   const promptButtons = document.getElementById("prompt-buttons")
   promptButtons.addEventListener("click", e => {
@@ -62,6 +59,44 @@ function randomPrompt(promptType) {
 
 
 // ENTERIES
+
+function pastEntriesButton() {
+  journalEntriesDiv.innerHTML = `
+  <a class="waves-effect waves-light btn-large center" id="get-past-entries">Read Past Journal Entries</a>
+  `
+  attachPastEntriesListener()
+}
+
+function attachPastEntriesListener() {
+  let getPastEntries = document.getElementById("get-past-entries")
+  getPastEntries.addEventListener("click", appendEntriesDivs)
+}
+
+
+function appendEntriesDivs(e) {
+  e.preventDefault
+  journalEntriesDiv.innerHTML = `<h5>Journal Entries:</h5>
+  <!-- Dropdown Trigger-->
+  <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
+  <!---Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+  <li><a href="#!" id="all">All Entries</a></li>
+  <li class="divider" tabindex="-1"></li>
+  <li><a href="#!" id="1">Inspired</a></li>
+  <li class="divider" tabindex="-1"></li>
+  <li><a href="#!" id="2">Happy</a></li>
+  <li class="divider" tabindex="-1"></li>
+  <li><a href="#!" id="3">Anxious</a></li>
+  <li class="divider" tabindex="-1"></li>
+  <li><a href="#!" id="4">Sad</a></li>
+  <li class="divider" tabindex="-1"></li>
+  <li><a href="#!" id="5">Reflective</a></li>
+  <li class="divider" tabindex="-1"></li>
+  <li><a href="#!" id="6">Self-Esteem</a></li>
+  </ul>`
+  getEntries()
+  attachMoodListener()
+}
 
 function getEntries() {
   fetch(`http://localhost:3000/entries`)
