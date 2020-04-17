@@ -21,7 +21,7 @@ function getPrompts() {
       return response.json()
     })
     .then(function (data) {
-      let prompts = data.map(prompt => new Prompt(prompt))
+      data.map(prompt => new Prompt(prompt))
 
     })
     .catch(alert)
@@ -88,14 +88,15 @@ function sortEntries(entries) {
 }
 
 function renderEntries(entries) {
+  let entriesTitle = document.getElementById("entries-title")
+  entriesDiv.innerHTML = ""
   if (entries.every(entry => entry.prompt.mood_id === entries[0].prompt.mood_id)) {
-
-    entriesDiv.insertAdjacentHTML('beforebegin', `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`)
+    entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`
     entries.forEach(entry => renderEntryCard(entry))
     addDeleteButtonListeners()
 
   } else {
-    entriesDiv.innerHTML = "" /// clears the entriesDiv
+    entriesTitle.innerHTML = ""
     entries.forEach(entry => renderEntryCard(entry))
     addDeleteButtonListeners()
   }
@@ -192,20 +193,24 @@ function attachMoodListener() {
 
 function getEntriesByMood(e) {
   e.preventDefault
-  fetch(`http://localhost:3000/moods/${e.target.id}`)
-    .then(function (response) {
-      if (response.status !== 200) {
-        throw new Error(response.statusText)
-      }
-      return response.json()
-    })
-    .then(function (data) {
-      let entries = data.entries.map(entry => new Entry(entry))
-      sortEntries(entries)
-      renderEntries(entries)
+  if (e.target.id === "all") {
+    getEntries()
+  } else {
+    fetch(`http://localhost:3000/moods/${e.target.id}`)
+      .then(function (response) {
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+        return response.json()
+      })
+      .then(function (data) {
+        let entries = data.entries.map(entry => new Entry(entry))
+        sortEntries(entries)
+        renderEntries(entries)
 
-    })
-    .catch(alert)
+      })
+      .catch(alert)
+  }
 }
 
 // RANDOM ARRAY FUNCTION
