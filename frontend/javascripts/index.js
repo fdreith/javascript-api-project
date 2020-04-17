@@ -75,26 +75,25 @@ function handlePastEntriesButton(e) {
 }
 
 function appendEntriesDivs() {
-  // programatically add these
   journalEntriesDiv.innerHTML = `
   <h5>Journal Entries:</h5>
   <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
   <ul id='dropdown1' class='dropdown-content'>
-  <li><a href="#!" id="all">All Entries</a></li>
-  <li class="divider" tabindex="-1"></li>
-  <li><a href="#!" id="1">Inspired</a></li>
-  <li class="divider" tabindex="-1"></li>
-  <li><a href="#!" id="2">Happy</a></li>
-  <li class="divider" tabindex="-1"></li>
-  <li><a href="#!" id="3">Anxious</a></li>
-  <li class="divider" tabindex="-1"></li>
-  <li><a href="#!" id="4">Sad</a></li>
-  <li class="divider" tabindex="-1"></li>
-  <li><a href="#!" id="5">Reflective</a></li>
-  <li class="divider" tabindex="-1"></li>
-  <li><a href="#!" id="6">Self-Esteem</a></li>
-  </ul>
   `
+  addDropdownOptions()
+}
+
+function addDropdownOptions() {
+  const dropdownOptions = document.getElementById("dropdown1")
+  dropdownOptions.insertAdjacentHTML('afterbegin', `
+    <li><a href="#!" id="all">All Entries</a></li>
+    `)
+  Mood.all.forEach(mood => {
+    dropdownOptions.insertAdjacentHTML('beforeend', `
+    <li class="divider" tabindex="-1"></li>
+    <li><a href="#!" id="${mood.id}">${mood.mood_type}</a></li>
+    ` )
+  })
   getEntries()
   attachMoodListener()
   $('.dropdown-trigger').dropdown()
@@ -258,7 +257,7 @@ function getMoods() {
 }
 
 function attachMoodListener() {
-  let dropdownOptions = document.getElementById("dropdown1")
+  const dropdownOptions = document.getElementById("dropdown1")
   dropdownOptions.addEventListener("click", getEntriesByMood)
 }
 
