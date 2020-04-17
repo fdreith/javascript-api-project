@@ -170,23 +170,35 @@ function deleteEntry(e) {
 
 function renderNewEntryForm(randomPrompt) {
   promptDiv.innerHTML = `
-  <div>
   <h4 id="prompt">${randomPrompt.question}</h4>
-  </div>
+  <p>Minutes:</p>
+  <p id="timer"> 0 </p> 
   <div id="prompt-form" class="row">
-  <form class="prompt-form" id="new-entry-form">
-  <div class="row">
-  <div class="input-field prompt-form">
-  <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
-  <label for="textarea1">Journal Entry</label>
-  <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
-  <input type="submit" name="" value="Finished with Entry">
-  </div>
-  </div>
-  </form>
+    <form class="prompt-form" id="new-entry-form">
+      <div class="row">
+        <div class="input-field prompt-form">
+          <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
+          <label for="textarea1">Journal Entry</label>
+          <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
+          <input type="submit" name="" value="Finished with Entry">
+        </div>
+      </div>
+    </form>
   </div>
   `
   addEntryFormListener()
+  startTimer()
+}
+
+
+let time
+let timer
+
+function startTimer() {
+  timer = document.getElementById("timer")
+  time = setInterval(function () {
+    timer.innerText++
+  }, 1000)
 }
 
 function addEntryFormListener() {
@@ -194,12 +206,12 @@ function addEntryFormListener() {
   promptForm.addEventListener("submit", createEntry)
 }
 
-
 function createEntry(e) {
   e.preventDefault()
+  debugger
   const content = document.getElementById("content").value
   const prompt_id = parseInt(document.getElementById("prompt-id").value)
-  const minutes = "n/a for now"
+  const minutes = timer.innerText
   const entryData = {
     entry: {
       content,
@@ -225,6 +237,9 @@ function createEntry(e) {
       }
     })
     .catch(alert)
+
+  clearInterval(time)
+
 }
 
 // MOOD
