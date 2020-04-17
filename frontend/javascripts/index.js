@@ -7,7 +7,6 @@ const journalEntriesDiv = document.getElementById("journal-entries")
 function init() {
   getPrompts()
   getMoods()
-  getPromptCategories()
   pastEntriesButton()
 }
 
@@ -28,31 +27,84 @@ function getPrompts() {
     .catch(alert)
 }
 
-function getPromptCategories() {
-  // should I, put this in a service class? OR// programatically add these!
+function appendPromptOptions(moods) {
   promptDiv.innerHTML = `  
-    <div id="prompt-buttons">
     <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
     <br>
-    <a class="waves-effect waves-light btn-large" id="1">Inspired</a>
-    <a class="waves-effect waves-light btn-large" id="2">Happy</a>
-    <a class="waves-effect waves-light btn-large" id="3">Anxious</a>
-    <a class="waves-effect waves-light btn-large" id="4">Sad</a>
-    <a class="waves-effect waves-light btn-large" id="5">Reflective</a>
-    <a class="waves-effect waves-light btn-large" id="6">Self-Esteem</a>
-    </div>
     `
-  const promptButtons = document.getElementById("prompt-buttons")
-  promptButtons.addEventListener("click", e => {
-    e.preventDefault()
-    randomPrompt(e.target.id)
-  })
+  addPromptButtons(moods)
 }
 
-function randomPrompt(promptType) {
-  let targetPrompts = Prompt.all.filter(prompt => prompt.mood.id === parseInt(promptType))
+function addPromptButtons(moods) {
+  if (!!moods) {
+    moods.forEach(mood => {
+      promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
+    })
+  } else {
+    Mood.all.forEach(mood => {
+      promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
+    })
+  }
+  addPromptListeners()
+}
+
+function addPromptListeners() {
+  const promptButtons = promptDiv.querySelectorAll("a")
+  for (let i = 0; i < promptButtons.length; i++) {
+    promptButtons[i].addEventListener("click", randomPrompt)
+  }
+}
+
+function randomPrompt(e) {
+  e.preventDefault()
+  let targetPrompts = Prompt.all.filter(prompt => prompt.mood.id === parseInt(e.target.id))
   let randomPrompt = targetPrompts.random()
   renderNewEntryForm(randomPrompt)
+}
+
+// MOOD
+
+function getMoods() {
+  let moods
+  fetch('http://localhost:3000/moods/')
+    .then(function (response) {
+      if (response.status !== 200) {
+        throw new Error(response.statusText)
+      }
+      return response.json()
+    })
+    .then(function (data) {
+      moods = data.map(mood => new Mood(mood))
+      appendPromptOptions(moods)
+    })
+    .catch(alert)
+}
+
+function attachMoodListener() {
+  const dropdownOptions = document.getElementById("dropdown1")
+  dropdownOptions.addEventListener("click", getEntriesByMood)
+}
+
+function getEntriesByMood(e) {
+  e.preventDefault
+  if (e.target.id === "all") {
+    getEntries()
+  } else {
+    fetch(`http://localhost:3000/moods/${e.target.id}`)
+      .then(function (response) {
+        if (response.status !== 200) {
+          throw new Error(response.statusText)
+        }
+        return response.json()
+      })
+      .then(function (data) {
+        let entries = data.entries.map(entry => new Entry(entry))
+        sortEntries(entries)
+        renderEntries(entries)
+
+      })
+      .catch(alert)
+  }
 }
 
 // ENTERIES
@@ -192,7 +244,7 @@ function renderNewEntryForm(randomPrompt) {
   startTimer()
 }
 
-
+// DO SOMETHING WITH THESE!!!!
 let time
 let timer
 
@@ -233,55 +285,13 @@ function createEntry(e) {
       if (responseJSON.errors) {
         throw new Error(responseJSON.errors)
       } else {
-        getPromptCategories()
+        appendPromptOptions()
         appendEntriesDivs()
       }
     })
-    .catch(alert)
+  // .catch(alert)
 }
 
-// MOOD
-
-function getMoods() {
-  fetch('http://localhost:3000/moods/')
-    .then(function (response) {
-      if (response.status !== 200) {
-        throw new Error(response.statusText)
-      }
-      return response.json()
-    })
-    .then(function (data) {
-      let moods = data.map(mood => new Mood(mood))
-    })
-    .catch(alert)
-}
-
-function attachMoodListener() {
-  const dropdownOptions = document.getElementById("dropdown1")
-  dropdownOptions.addEventListener("click", getEntriesByMood)
-}
-
-function getEntriesByMood(e) {
-  e.preventDefault
-  if (e.target.id === "all") {
-    getEntries()
-  } else {
-    fetch(`http://localhost:3000/moods/${e.target.id}`)
-      .then(function (response) {
-        if (response.status !== 200) {
-          throw new Error(response.statusText)
-        }
-        return response.json()
-      })
-      .then(function (data) {
-        let entries = data.entries.map(entry => new Entry(entry))
-        sortEntries(entries)
-        renderEntries(entries)
-
-      })
-      .catch(alert)
-  }
-}
 
 // RANDOM ARRAY FUNCTION
 
