@@ -67,11 +67,14 @@ function pastEntriesButton() {
 
 function attachPastEntriesListener() {
   let getPastEntries = document.getElementById("get-past-entries")
-  getPastEntries.addEventListener("click", appendEntriesDivs)
+  getPastEntries.addEventListener("click", handlePastEntriesButton)
+}
+function handlePastEntriesButton(e) {
+  e.preventDefault
+  appendEntriesDivs()
 }
 
-function appendEntriesDivs(e) {
-  e.preventDefault
+function appendEntriesDivs() {
   // programatically add these
   journalEntriesDiv.innerHTML = `
   <h5>Journal Entries:</h5>
@@ -159,7 +162,7 @@ function deleteEntry(e) {
       .then(responseJSON => {
         if (responseJSON.message) {
           alert(responseJSON.message)
-          getEntries()
+          appendEntriesDivs()
         } else {
           throw new Error(responseJSON.errors)
         }
@@ -208,7 +211,6 @@ function addEntryFormListener() {
 
 function createEntry(e) {
   e.preventDefault()
-  debugger
   const content = document.getElementById("content").value
   const prompt_id = parseInt(document.getElementById("prompt-id").value)
   const minutes = timer.innerText
@@ -233,13 +235,10 @@ function createEntry(e) {
         throw new Error(responseJSON.errors)
       } else {
         getPromptCategories()
-        getEntries()
+        appendEntriesDivs()
       }
     })
     .catch(alert)
-
-  clearInterval(time)
-
 }
 
 // MOOD
