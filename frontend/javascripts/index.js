@@ -3,12 +3,17 @@ const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
 
 function init() {
-  getPromptCategories()
   getPrompts()
-  getEntries()
-  $('.dropdown-trigger').dropdown();
+  getMoods()
+  getPromptCategories()
+  $('.dropdown-trigger').dropdown()
   attachMoodListener()
+  // secondInit()
 }
+
+// function secondInit() {
+//   getEntries()
+// }
 
 // PROMPTS
 
@@ -26,6 +31,7 @@ function getPrompts() {
     })
     .catch(alert)
 }
+
 
 function getPromptCategories() {
   // can I, should I, put this in a service class? 
@@ -187,6 +193,20 @@ function createEntry(e) {
 }
 
 // MOOD
+
+function getMoods() {
+  fetch('http://localhost:3000/moods/')
+    .then(function (response) {
+      if (response.status !== 200) {
+        throw new Error(response.statusText)
+      }
+      return response.json()
+    })
+    .then(function (data) {
+      let moods = data.map(mood => new Mood(mood))
+    })
+    .catch(alert)
+}
 
 function attachMoodListener() {
   let dropdownOptions = document.getElementById("dropdown1")
