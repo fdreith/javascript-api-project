@@ -54,10 +54,6 @@ function randomPrompt(promptType) {
   renderNewEntryForm(randomPrompt)
 }
 
-function addPromptFormListener() {
-  const promptForm = document.getElementById("prompt-form")
-  promptForm.addEventListener("submit", createEntry)
-}
 
 // ENTERIES
 
@@ -106,27 +102,6 @@ function renderEntryCard(entry) {
   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
 }
 
-function renderNewEntryForm(randomPrompt) {
-  promptDiv.innerHTML = `
-        <div>
-          <h4 id="prompt">${randomPrompt.question}</h4>
-        </div>
-        <div id="prompt-form" class="row">
-        <form class="prompt-form" id="new-entry-form">
-          <div class="row">
-            <div class="input-field prompt-form">
-              <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
-              <label for="textarea1">Journal Entry</label>
-              <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
-              <input type="submit" name="" value="Finished with Entry">
-            </div>
-          </div>
-        </form>
-      </div>
-      `
-  addPromptFormListener()
-}
-
 function addDeleteButtonListeners() {
   let deleteButtons = document.querySelectorAll(".delete-div button")
   for (let i = 0; i < deleteButtons.length; i++) {
@@ -152,6 +127,33 @@ function deleteEntry(e) {
       .catch(alert)
   }
 }
+
+function renderNewEntryForm(randomPrompt) {
+  promptDiv.innerHTML = `
+  <div>
+  <h4 id="prompt">${randomPrompt.question}</h4>
+  </div>
+  <div id="prompt-form" class="row">
+  <form class="prompt-form" id="new-entry-form">
+  <div class="row">
+  <div class="input-field prompt-form">
+  <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
+  <label for="textarea1">Journal Entry</label>
+  <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
+  <input type="submit" name="" value="Finished with Entry">
+  </div>
+  </div>
+  </form>
+  </div>
+  `
+  addEntryFormListener()
+}
+
+function addEntryFormListener() {
+  const promptForm = document.getElementById("prompt-form")
+  promptForm.addEventListener("submit", createEntry)
+}
+
 
 function createEntry(e) {
   e.preventDefault()
