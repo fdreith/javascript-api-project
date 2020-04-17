@@ -19,7 +19,7 @@ class EntriesController < ApplicationController
     if @entry.save
       render json: @entry, status: :created, location: @entry
     else
-      render json: @entry.errors, status: :unprocessable_entity
+      render json: {errors: @entry.errors.full_messages}, status: :unprocessable_entity
     end
   end
 
