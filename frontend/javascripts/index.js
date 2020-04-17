@@ -7,7 +7,7 @@ function init() {
   getPrompts()
   getMoods()
   getPromptCategories()
-  $('.dropdown-trigger').dropdown()
+  // $('.dropdown-trigger').dropdown()
   pastEntriesButton()
 }
 
@@ -72,7 +72,6 @@ function attachPastEntriesListener() {
   getPastEntries.addEventListener("click", appendEntriesDivs)
 }
 
-
 function appendEntriesDivs(e) {
   e.preventDefault
   journalEntriesDiv.innerHTML = `<h5>Journal Entries:</h5>
@@ -96,6 +95,7 @@ function appendEntriesDivs(e) {
   </ul>`
   getEntries()
   attachMoodListener()
+  $('.dropdown-trigger').dropdown()
 }
 
 function getEntries() {

@@ -1,7 +1,6 @@
 class Entry {
 
   constructor(data) {
-    debugger
     this.id = data.id
     this.prompt = this.findPrompt(data)
     this.mood = this.findMood(data)
@@ -11,7 +10,6 @@ class Entry {
   }
 
   renderEntry() {// need to make mood show
-    debugger
     return `
     <div class="card">
       <div class="delete-div">
@@ -21,7 +19,7 @@ class Entry {
       <div class="card-content">
         <strong>Written on ${this.created_at.toDateString()} at ${this.created_at.getHours()}:${this.created_at.getMinutes()}</strong> 
         <br>
-        <p>Mood: ${this.mood}</p> 
+        <p>Mood: ${this.mood.mood_type}</p> 
         <br>
         <strong> ${this.prompt.question}</strong>
         <br><br>
@@ -40,10 +38,10 @@ class Entry {
   }
 
   findMood(data) {
-    if (!!data.mood) {
-      return data.mood
-    } else {
+    if (!!data.prompt) {
       return Mood.all.find(mood => mood.id === data.prompt.mood_id)
+    } else {
+      return this.findPrompt(data).mood
     }
   }
 }
