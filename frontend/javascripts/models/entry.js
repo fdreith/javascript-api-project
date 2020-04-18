@@ -12,7 +12,7 @@ class Entry {
   }
 
   save() {
-    Mood.all.push(this)
+    Entry.all.push(this)
   }
 
   renderEntry() {
