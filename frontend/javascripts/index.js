@@ -27,24 +27,19 @@ function getPrompts() {
     .catch(alert)
 }
 
-function appendPromptOptions(moods) {
+function appendMoodPromptOptions() {
+  debugger
   promptDiv.innerHTML = `  
     <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
     <br>
     `
-  addPromptButtons(moods)
+  addMoodPromptButtons()
 }
 
-function addPromptButtons(moods) {
-  if (!!moods) {
-    moods.forEach(mood => {
-      promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
-    })
-  } else {
-    Mood.all.forEach(mood => {
-      promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
-    })
-  }
+function addMoodPromptButtons() {
+  Mood.all.forEach(mood => {
+    promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
+  })
   addPromptListeners()
 }
 
@@ -74,7 +69,7 @@ function getMoodsAndEntries() {
     })
     .then(function (data) {
       let moods = data.map(mood => new Mood(mood))
-      appendPromptOptions(moods)
+      appendMoodPromptOptions(moods)
       createEntries(moods)
     })
   // .catch(alert)
@@ -114,14 +109,11 @@ function pastEntriesButton() {
 
 function attachPastEntriesListener() {
   let getPastEntries = document.getElementById("get-past-entries")
-  getPastEntries.addEventListener("click", handlePastEntriesButton)
-}
-function handlePastEntriesButton(e) {
-  e.preventDefault
-  appendEntriesDivs()
+  getPastEntries.addEventListener("click", appendEntriesDivs)
 }
 
-function appendEntriesDivs() {
+function appendEntriesDivs(e) {
+  e.preventDefault
   journalEntriesDiv.innerHTML = `
   <h5>Journal Entries:</h5>
   <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
@@ -152,7 +144,8 @@ function createEntries(moods) {
 
 // REDO THIS!!
 function getEntries() {
-
+  sortEntries(Entry.all)
+  renderEntries(Entry.all)
 }
 
 function sortEntries(entries) {
@@ -165,7 +158,7 @@ function sortEntries(entries) {
   })
 }
 
-function renderEntries(entries) {
+function renderEntries(entries) { /// working on this
   let entriesTitle = document.getElementById("entries-title")
   entriesDiv.innerHTML = ""
   if (entries.length > 0) {
@@ -274,7 +267,7 @@ function createEntry(e) {
       if (responseJSON.errors) {
         throw new Error(responseJSON.errors)
       } else {
-        appendPromptOptions()
+        appendMoodPromptOptions()
         appendEntriesDivs()
       }
     })
