@@ -58,6 +58,7 @@ function randomPrompt(e) {
 // MOOD
 
 function getMoodsAndEntries() {
+  
   fetch('http://localhost:3000/moods/')
     .then(function (response) {
       if (response.status !== 200) {
@@ -115,8 +116,7 @@ function attachPastEntriesListener() {
   getPastEntries.addEventListener("click", appendEntriesDivs)
 }
 
-function appendEntriesDivs(e) {
-  e.preventDefault
+function appendEntriesDivs() {
   journalEntriesDiv.innerHTML = `
   <h5>Journal Entries:</h5>
   <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
@@ -195,7 +195,8 @@ function deleteEntry(e) {
       .then(responseJSON => {
         if (responseJSON.message) {
           alert(responseJSON.message)
-          appendEntriesDivs()
+          // appendEntriesDivs() // need to create deleteFromAllEntries
+          getMoodsAndEntries()
         } else {
           throw new Error(responseJSON.errors)
         }

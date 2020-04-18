@@ -9,7 +9,8 @@ class Mood {
     this.save()
   }
   save() {
-    Mood.all.push(this)
+    if (!!!Mood.all.find(mood => mood.id === this.id)) {
+      Mood.all.push(this)
+    }
   }
-
 }
