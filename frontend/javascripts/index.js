@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", init)
 const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
 const journalEntriesDiv = document.getElementById("journal-entries")
+let timer
 
 function init() {
   getPrompts()
@@ -90,6 +91,12 @@ function getEntriesByMood(e) {
   if (e.target.id === "all") {
     getEntries()
   } else {
+    // let mood = Mood.all.find(mood => mood.id === parseInt(e.target.id))
+    // if (mood.entries.length > 0) {
+    //   sortEntries(mood.entries)
+    //   renderEntries(mood.entries)
+    // } else {
+    //   entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${mood.mood_type} category.</h6>`
     fetch(`http://localhost:3000/moods/${e.target.id}`)
       .then(function (response) {
         if (response.status !== 200) {
@@ -104,7 +111,9 @@ function getEntriesByMood(e) {
 
       })
       .catch(alert)
+
   }
+
 }
 
 // ENTERIES
@@ -180,15 +189,19 @@ function sortEntries(entries) {
 function renderEntries(entries) {
   let entriesTitle = document.getElementById("entries-title")
   entriesDiv.innerHTML = ""
-  if (entries.every(entry => entry.prompt.mood_id === entries[0].prompt.mood_id)) {
-    entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`
-    entries.forEach(entry => renderEntryCard(entry))
-    addDeleteButtonListeners()
+  if (entries.length > 0) {
+    if (entries.every(entry => entry.prompt.mood_id === entries[0].prompt.mood_id)) {
+      entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`
+      entries.forEach(entry => renderEntryCard(entry))
+      addDeleteButtonListeners()
 
+    } else {
+      entriesTitle.innerHTML = ""
+      entries.forEach(entry => renderEntryCard(entry))
+      addDeleteButtonListeners()
+    }
   } else {
-    entriesTitle.innerHTML = ""
-    entries.forEach(entry => renderEntryCard(entry))
-    addDeleteButtonListeners()
+    entriesDiv.innerHTML = "You don't have any entries for this mood."
   }
 }
 
@@ -244,13 +257,10 @@ function renderNewEntryForm(randomPrompt) {
   startTimer()
 }
 
-// DO SOMETHING WITH THESE!!!!
-let time
-let timer
 
 function startTimer() {
   timer = document.getElementById("timer")
-  time = setInterval(function () {
+  let time = setInterval(function () {
     timer.innerText++
   }, 6000)
 }
@@ -289,7 +299,7 @@ function createEntry(e) {
         appendEntriesDivs()
       }
     })
-  // .catch(alert)
+    .catch(alert)
 }
 
 
