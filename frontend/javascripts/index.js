@@ -7,7 +7,6 @@ let timer
 
 function init() {
   getPrompts()
-  pastEntriesButton()
 }
 
 // PROMPTS
@@ -28,7 +27,6 @@ function getPrompts() {
 }
 
 function appendMoodPromptOptions() {
-  debugger
   promptDiv.innerHTML = `  
     <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
     <br>
@@ -99,6 +97,11 @@ function getEntriesByMood(e) {
 
 // ENTERIES
 
+function createEntries(moods) {
+  moods.forEach(mood => mood.entries.forEach(entry => new Entry(entry)))
+  pastEntriesButton()
+}
+
 function pastEntriesButton() {
   journalEntriesDiv.innerHTML = `
   <br>
@@ -137,13 +140,9 @@ function addDropdownOptions() {
   attachMoodListener()
   $('.dropdown-trigger').dropdown()
 }
-
-function createEntries(moods) {
-  moods.forEach(mood => mood.entries.forEach(entry => new Entry(entry)))
-}
-
 // REDO THIS!!
 function getEntries() {
+  debugger
   sortEntries(Entry.all)
   renderEntries(Entry.all)
 }
@@ -159,9 +158,11 @@ function sortEntries(entries) {
 }
 
 function renderEntries(entries) { /// working on this
+  debugger
   let entriesTitle = document.getElementById("entries-title")
   entriesDiv.innerHTML = ""
   if (entries.length > 0) {
+    debugger
     if (entries.every(entry => entry.prompt.mood_id === entries[0].prompt.mood_id)) {
       entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`
       entries.forEach(entry => renderEntryCard(entry))
@@ -173,7 +174,7 @@ function renderEntries(entries) { /// working on this
       addDeleteButtonListeners()
     }
   } else {
-    entriesDiv.innerHTML = "You don't have any entries for this mood."
+    entriesDiv.innerHTML = "You don't have any entries."
   }
 }
 
