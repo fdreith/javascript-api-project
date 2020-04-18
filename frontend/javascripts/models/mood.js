@@ -7,9 +7,14 @@ class Mood {
     this.prompts = data.prompts
     this.entries = data.entries
     this.save()
+    this.createMoodEntries()
   }
   save() {
     Mood.all.push(this)
+  }
+
+  createMoodEntries() {
+    this.entries.forEach(entry => new Entry(entry))
   }
 
 }

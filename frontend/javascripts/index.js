@@ -7,7 +7,6 @@ let timer
 
 function init() {
   getPrompts()
-  getMoods()
   pastEntriesButton()
 }
 
@@ -23,7 +22,7 @@ function getPrompts() {
     })
     .then(function (data) {
       data.map(prompt => new Prompt(prompt))
-
+      getMoods()
     })
     .catch(alert)
 }
@@ -66,7 +65,6 @@ function randomPrompt(e) {
 // MOOD
 
 function getMoods() {
-  let moods
   fetch('http://localhost:3000/moods/')
     .then(function (response) {
       if (response.status !== 200) {
@@ -75,10 +73,10 @@ function getMoods() {
       return response.json()
     })
     .then(function (data) {
-      moods = data.map(mood => new Mood(mood))
+      let moods = data.map(mood => new Mood(mood))
       appendPromptOptions(moods)
     })
-    .catch(alert)
+  // .catch(alert)
 }
 
 function attachMoodListener() {
@@ -86,6 +84,7 @@ function attachMoodListener() {
   dropdownOptions.addEventListener("click", getEntriesByMood)
 }
 
+// REDO THIS!!
 function getEntriesByMood(e) {
   e.preventDefault
   if (e.target.id === "all") {
@@ -97,20 +96,6 @@ function getEntriesByMood(e) {
     //   renderEntries(mood.entries)
     // } else {
     //   entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${mood.mood_type} category.</h6>`
-    fetch(`http://localhost:3000/moods/${e.target.id}`)
-      .then(function (response) {
-        if (response.status !== 200) {
-          throw new Error(response.statusText)
-        }
-        return response.json()
-      })
-      .then(function (data) {
-        let entries = data.entries.map(entry => new Entry(entry))
-        sortEntries(entries)
-        renderEntries(entries)
-
-      })
-      .catch(alert)
 
   }
 
@@ -160,6 +145,7 @@ function addDropdownOptions() {
   $('.dropdown-trigger').dropdown()
 }
 
+// REDO THIS!!
 function getEntries() {
   fetch(`http://localhost:3000/entries`)
     .then(function (response) {
@@ -299,7 +285,7 @@ function createEntry(e) {
         appendEntriesDivs()
       }
     })
-    .catch(alert)
+  // .catch(alert)
 }
 
 
