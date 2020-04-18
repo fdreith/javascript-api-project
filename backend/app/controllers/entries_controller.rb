@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
   # GET /entries
   def index
     @entries = Entry.all
-    render json: @entries, include: :prompt, except: :prompt_id
+    render json: @entries
   end
 
   # GET /entries/1
