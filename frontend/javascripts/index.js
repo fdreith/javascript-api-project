@@ -1,14 +1,10 @@
-document.addEventListener("DOMContentLoaded", init)
+document.addEventListener("DOMContentLoaded", getMoods)
 
 const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
 const journalEntriesDiv = document.getElementById("journal-entries")
 const entriesTitle = document.getElementById("entries-title")
 let timer
-
-function init() {
-  getMoods()
-}
 
 function getMoods() {
   fetch('http://localhost:3000/moods/')
@@ -23,7 +19,7 @@ function getMoods() {
       createPrompts(moods)
       appendMoodPromptOptions()
     })
-  // .catch(alert)
+    .catch(alert)
 }
 
 function createPrompts(moods) {
@@ -48,7 +44,7 @@ function appendMoodPromptOptions() {
   addMoodPromptButtons()
 }
 
-function addMoodPromptButtons() {
+function addMoodPromptButtons() { // could be a class method
   Mood.all.forEach(mood => {
     promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
   })
@@ -136,7 +132,7 @@ function createEntry(e) {
         appendMoodPromptOptions()
       }
     })
-  // .catch(alert)
+    .catch(alert)
 }
 
 // GET ENTRIES
@@ -168,7 +164,7 @@ function addDropdownOptions() {
   dropdownOptions.insertAdjacentHTML('afterbegin', `
       <li><a href="#!" id="all">All Entries</a></li>
       `)
-  Mood.all.forEach(mood => {
+  Mood.all.forEach(mood => { // could be a class method
     dropdownOptions.insertAdjacentHTML('beforeend', `
       <li class="divider" tabindex="-1"></li>
       <li><a href="#!" id="${mood.id}">${mood.mood_type}</a></li>
@@ -195,7 +191,7 @@ function sortEntries(entries) {
   })
 }
 
-function renderEntries(entries) { /// working on this
+function renderEntries(entries) {
   entriesDiv.innerHTML = ""
   if (entries.length > 0) {
     entries.forEach(entry => renderEntryCard(entry))
@@ -226,7 +222,7 @@ function deleteEntry(e) {
       .then(responseJSON => {
         if (responseJSON.message) {
           alert(responseJSON.message)
-          deleteEntryFromAll(e.target.id) // model function to delete entry on js models all
+          deleteEntryFromAll(e.target.id)
           appendEntriesDivs()
         } else {
           throw new Error(responseJSON.errors)
@@ -244,9 +240,7 @@ function deleteEntryFromAll(id) {
   }
 }
 
-
 // GET ENTRIES BY MOOD
-
 
 function attachMoodListener() {
   const dropdownOptions = document.getElementById("dropdown1")
@@ -259,7 +253,7 @@ function getEntriesByMood(e) {
     getEntries()
   } else {
     let mood = Mood.all.find(mood => mood.id === parseInt(e.target.id))
-    let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id))
+    let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id)) // this could be a class method
     entriesTitle.innerHTML = `<h5>Entries that you felt ${mood.mood_type}:</h5>`
     if (entries.length > 0) {
       sortEntries(entries)
