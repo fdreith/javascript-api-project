@@ -2,7 +2,6 @@ class Prompt {
   static all = []
 
   constructor(data) {
-    debugger
     this.id = data.id
     this.question = data.question
     this.mood = this.findMood(data)
@@ -16,7 +15,7 @@ class Prompt {
   }
 
   findMood(data) {
-    Mood.all.find(mood => mood.id === data.mood_id)
+    return Mood.all.find(mood => mood.id === data.mood_id)
   }
 
 }
