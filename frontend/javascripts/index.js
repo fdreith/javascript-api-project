@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", init)
 const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
 const journalEntriesDiv = document.getElementById("journal-entries")
+const entriesTitle = document.getElementById("entries-title")
 let timer
 
 function init() {
@@ -78,21 +79,20 @@ function attachMoodListener() {
   dropdownOptions.addEventListener("click", getEntriesByMood)
 }
 
-// REDO THIS!!
 function getEntriesByMood(e) {
   e.preventDefault
   if (e.target.id === "all") {
     getEntries()
   } else {
-    // let mood = Mood.all.find(mood => mood.id === parseInt(e.target.id))
-    // if (mood.entries.length > 0) {
-    //   sortEntries(mood.entries)
-    //   renderEntries(mood.entries)
-    // } else {
-    //   entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${mood.mood_type} category.</h6>`
-
+    let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id))
+    if (entries.length > 0) {
+      entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].mood.mood_type}</h5>`
+      sortEntries(entries)
+      renderEntries(entries)
+    } else {
+      entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${entries[0].mood.mood_type} category.</h6>`
+    }
   }
-
 }
 
 // ENTERIES
@@ -139,7 +139,9 @@ function addDropdownOptions() {
   attachMoodListener()
   $('.dropdown-trigger').dropdown()
 }
+
 function getEntries() {
+  entriesTitle.innerHTML = ""
   sortEntries(Entry.all)
   renderEntries(Entry.all)
 }
@@ -155,18 +157,9 @@ function sortEntries(entries) {
 }
 
 function renderEntries(entries) { /// working on this
-
-  let entriesTitle = document.getElementById("entries-title")
   entriesDiv.innerHTML = ""
   if (entries.length > 0) {
-    if (entries.every(entry => entry.mood.id === entries[0].mood.id)) {
-      entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`
-      entries.forEach(entry => renderEntryCard(entry))
-
-    } else {
-      entriesTitle.innerHTML = ""
-      entries.forEach(entry => renderEntryCard(entry))
-    }
+    entries.forEach(entry => renderEntryCard(entry))
   } else {
     entriesDiv.innerHTML = "You don't have any entries."
   }
@@ -210,7 +203,6 @@ function deleteFromAllEntries(id) {
       Entry.all.splice(i, 1); i--
     }
   }
-
 }
 
 function renderNewEntryForm(randomPrompt) {
@@ -260,6 +252,7 @@ function createEntry(e) {
       minutes
     }
   }
+
   fetch('http://localhost:3000/entries/', {
     method: "POST",
     headers: {
@@ -273,7 +266,6 @@ function createEntry(e) {
       if (responseJSON.errors) {
         throw new Error(responseJSON.errors)
       } else {
-        debugger
         new Entry(responseJSON)
         appendEntriesDivs()
         appendMoodPromptOptions()
@@ -281,7 +273,6 @@ function createEntry(e) {
     })
   // .catch(alert)
 }
-
 
 // RANDOM ARRAY FUNCTION
 
