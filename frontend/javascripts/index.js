@@ -58,7 +58,6 @@ function randomPrompt(e) {
 // MOOD
 
 function getMoodsAndEntries() {
-  
   fetch('http://localhost:3000/moods/')
     .then(function (response) {
       if (response.status !== 200) {
@@ -195,14 +194,23 @@ function deleteEntry(e) {
       .then(responseJSON => {
         if (responseJSON.message) {
           alert(responseJSON.message)
-          // appendEntriesDivs() // need to create deleteFromAllEntries
-          getMoodsAndEntries()
+          deleteFromAllEntries(e.target.id)
+          appendEntriesDivs()
         } else {
           throw new Error(responseJSON.errors)
         }
       })
       .catch(alert)
   }
+}
+
+function deleteFromAllEntries(id) {
+  for (let i = 0; i < Entry.all.length; i++) {
+    if (Entry.all[i].id === parseInt(id)) {
+      Entry.all.splice(i, 1); i--
+    }
+  }
+
 }
 
 function renderNewEntryForm(randomPrompt) {
@@ -230,7 +238,7 @@ function renderNewEntryForm(randomPrompt) {
 
 function startTimer() {
   timer = document.getElementById("timer")
-  let time = setInterval(function () {
+  setInterval(function () {
     timer.innerText++
   }, 6000)
 }
@@ -265,8 +273,10 @@ function createEntry(e) {
       if (responseJSON.errors) {
         throw new Error(responseJSON.errors)
       } else {
-        appendMoodPromptOptions()
+        debugger
+        new Entry(responseJSON)
         appendEntriesDivs()
+        appendMoodPromptOptions()
       }
     })
   // .catch(alert)
