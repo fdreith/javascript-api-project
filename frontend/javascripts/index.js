@@ -36,13 +36,12 @@ function createPrompts(moods) {
 function createEntries() {
   let entries = Mood.all.map(mood => mood.entries).flat(1)
   entries.forEach(entry => new Entry(entry))
-  debugger
 }
 
 function appendMoodPromptOptions() {
   promptDiv.innerHTML = `  
-    <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
-    <br>
+  <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
+  <br>
     `
 }
 
@@ -67,29 +66,97 @@ function randomPrompt(e) {
   renderNewEntryForm(randomPrompt)
 }
 
-// // MOOD
+function renderNewEntryForm(randomPrompt) {
+  promptDiv.innerHTML = `
+    <h4 id="prompt">${randomPrompt.question}</h4>
+    <p>Minutes:</p>
+    <p id="timer"> 0 </p> 
+    <div id="prompt-form" class="row">
+      <form class="prompt-form" id="new-entry-form">
+        <div class="row">
+          <div class="input-field prompt-form">
+            <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
+            <label for="textarea1">Journal Entry</label>
+            <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
+            <input type="submit" name="" value="Finished with Entry">
+          </div>
+        </div>
+      </form>
+    </div>
+    `
+  addEntryFormListener()
+  startTimer()
+}
 
 
-// function attachMoodListener() {
-//   const dropdownOptions = document.getElementById("dropdown1")
-//   dropdownOptions.addEventListener("click", getEntriesByMood)
-// }
+function startTimer() {
+  timer = document.getElementById("timer")
+  setInterval(function () {
+    timer.innerText++
+  }, 1000)
+}
 
-// function getEntriesByMood(e) {
-//   e.preventDefault
-//   if (e.target.id === "all") {
-//     getEntries()
-//   } else {
-//     let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id))
-//     if (entries.length > 0) {
-//       entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].mood.mood_type}</h5>`
-//       sortEntries(entries)
-//       renderEntries(entries)
-//     } else {
-//       entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${entries[0].mood.mood_type} category.</h6>`
-//     }
-//   }
-// }
+function addEntryFormListener() {
+  const promptForm = document.getElementById("prompt-form")
+  promptForm.addEventListener("submit", createEntry)
+}
+
+function createEntry(e) {
+  e.preventDefault()
+  const content = document.getElementById("content").value
+  const prompt_id = parseInt(document.getElementById("prompt-id").value)
+  const minutes = timer.innerText
+  const entryData = {
+    entry: {
+      content,
+      prompt_id,
+      minutes
+    }
+  }
+
+  fetch('http://localhost:3000/entries/', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(entryData)
+  })
+    .then(resp => resp.json())
+    .then(responseJSON => {
+      if (responseJSON.errors) {
+        throw new Error(responseJSON.errors)
+      } else {
+        new Entry(responseJSON)
+        appendEntriesDivs()
+        appendMoodPromptOptions()
+      }
+    })
+  // .catch(alert)
+}
+// MOOD
+
+
+function attachMoodListener() {
+  const dropdownOptions = document.getElementById("dropdown1")
+  dropdownOptions.addEventListener("click", getEntriesByMood)
+}
+
+function getEntriesByMood(e) {
+  e.preventDefault
+  if (e.target.id === "all") {
+    getEntries()
+  } else {
+    let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id))
+    if (entries.length > 0) {
+      entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].mood.mood_type}</h5>`
+      sortEntries(entries)
+      renderEntries(entries)
+    } else {
+      entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${entries[0].mood.mood_type} category.</h6>`
+    }
+  }
+}
 
 // // ENTERIES
 
@@ -201,77 +268,9 @@ function randomPrompt(e) {
 //   }
 // }
 
-// function renderNewEntryForm(randomPrompt) {
-//   promptDiv.innerHTML = `
-//   <h4 id="prompt">${randomPrompt.question}</h4>
-//   <p>Minutes:</p>
-//   <p id="timer"> 0 </p> 
-//   <div id="prompt-form" class="row">
-//     <form class="prompt-form" id="new-entry-form">
-//       <div class="row">
-//         <div class="input-field prompt-form">
-//           <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
-//           <label for="textarea1">Journal Entry</label>
-//           <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
-//           <input type="submit" name="" value="Finished with Entry">
-//         </div>
-//       </div>
-//     </form>
-//   </div>
-//   `
-//   addEntryFormListener()
-//   startTimer()
-// }
 
+// RANDOM ARRAY FUNCTION
 
-// function startTimer() {
-//   timer = document.getElementById("timer")
-//   setInterval(function () {
-//     timer.innerText++
-//   }, 6000)
-// }
-
-// function addEntryFormListener() {
-//   const promptForm = document.getElementById("prompt-form")
-//   promptForm.addEventListener("submit", createEntry)
-// }
-
-// function createEntry(e) {
-//   e.preventDefault()
-//   const content = document.getElementById("content").value
-//   const prompt_id = parseInt(document.getElementById("prompt-id").value)
-//   const minutes = timer.innerText
-//   const entryData = {
-//     entry: {
-//       content,
-//       prompt_id,
-//       minutes
-//     }
-//   }
-
-//   fetch('http://localhost:3000/entries/', {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Accept": "application/json"
-//     },
-//     body: JSON.stringify(entryData)
-//   })
-//     .then(resp => resp.json())
-//     .then(responseJSON => {
-//       if (responseJSON.errors) {
-//         throw new Error(responseJSON.errors)
-//       } else {
-//         new Entry(responseJSON)
-//         appendEntriesDivs()
-//         appendMoodPromptOptions()
-//       }
-//     })
-//   // .catch(alert)
-// }
-
-// // RANDOM ARRAY FUNCTION
-
-// Array.prototype.random = function () {
-//   return this[Math.floor((Math.random() * this.length))];
-// }
+Array.prototype.random = function () {
+  return this[Math.floor((Math.random() * this.length))];
+}
