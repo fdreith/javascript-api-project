@@ -97,7 +97,7 @@ function startTimer() {
   timer = document.getElementById("timer")
   setInterval(function () {
     timer.innerText++
-  }, 1000)
+  }, 60000)
 }
 
 function addEntryFormListener() {
