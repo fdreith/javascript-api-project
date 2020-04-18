@@ -140,9 +140,7 @@ function addDropdownOptions() {
   attachMoodListener()
   $('.dropdown-trigger').dropdown()
 }
-// REDO THIS!!
 function getEntries() {
-  debugger
   sortEntries(Entry.all)
   renderEntries(Entry.all)
 }
@@ -158,20 +156,17 @@ function sortEntries(entries) {
 }
 
 function renderEntries(entries) { /// working on this
-  debugger
+
   let entriesTitle = document.getElementById("entries-title")
   entriesDiv.innerHTML = ""
   if (entries.length > 0) {
-    debugger
-    if (entries.every(entry => entry.prompt.mood_id === entries[0].prompt.mood_id)) {
+    if (entries.every(entry => entry.mood.id === entries[0].mood.id)) {
       entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`
       entries.forEach(entry => renderEntryCard(entry))
-      addDeleteButtonListeners()
 
     } else {
       entriesTitle.innerHTML = ""
       entries.forEach(entry => renderEntryCard(entry))
-      addDeleteButtonListeners()
     }
   } else {
     entriesDiv.innerHTML = "You don't have any entries."
@@ -180,6 +175,7 @@ function renderEntries(entries) { /// working on this
 
 function renderEntryCard(entry) {
   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
+  addDeleteButtonListeners()
 }
 
 function addDeleteButtonListeners() {

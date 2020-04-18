@@ -3,7 +3,7 @@ class Entry {
 
   constructor(data) {
     this.id = data.id
-    this.prompt_id = this.findPrompt(data)
+    this.prompt = this.findPrompt(data)
     this.mood = this.findMood(data)
     this.minutes = data.minutes
     this.content = data.content
