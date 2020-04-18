@@ -2,7 +2,6 @@ class Entry {
   static all = []
 
   constructor(data) {
-    debugger
     this.id = data.id
     this.prompt_id = this.findPrompt(data)
     this.mood = this.findMood(data)

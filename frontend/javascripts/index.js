@@ -22,7 +22,7 @@ function getPrompts() {
     })
     .then(function (data) {
       data.map(prompt => new Prompt(prompt))
-      getMoods()
+      getMoodsAndEntries()
     })
     .catch(alert)
 }
@@ -64,7 +64,7 @@ function randomPrompt(e) {
 
 // MOOD
 
-function getMoods() {
+function getMoodsAndEntries() {
   fetch('http://localhost:3000/moods/')
     .then(function (response) {
       if (response.status !== 200) {
@@ -75,6 +75,7 @@ function getMoods() {
     .then(function (data) {
       let moods = data.map(mood => new Mood(mood))
       appendPromptOptions(moods)
+      createEntries(moods)
     })
   // .catch(alert)
 }
@@ -145,21 +146,13 @@ function addDropdownOptions() {
   $('.dropdown-trigger').dropdown()
 }
 
+function createEntries(moods) {
+  moods.forEach(mood => mood.entries.forEach(entry => new Entry(entry)))
+}
+
 // REDO THIS!!
 function getEntries() {
-  fetch(`http://localhost:3000/entries`)
-    .then(function (response) {
-      if (response.status !== 200) {
-        throw new Error(response.statusText)
-      }
-      return response.json()
-    })
-    .then(function (data) {
-      let entries = data.map(entry => new Entry(entry))
-      sortEntries(entries)
-      renderEntries(entries)
-    })
-    .catch(alert)
+
 }
 
 function sortEntries(entries) {
