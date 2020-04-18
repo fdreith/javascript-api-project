@@ -22,7 +22,6 @@ function getMoods() {
       let moods = data.map(mood => new Mood(mood))
       createPrompts(moods)
       appendMoodPromptOptions()
-      addMoodPromptButtons()
     })
   // .catch(alert)
 }
@@ -36,13 +35,17 @@ function createPrompts(moods) {
 function createEntries() {
   let entries = Mood.all.map(mood => mood.entries).flat(1)
   entries.forEach(entry => new Entry(entry))
+  pastEntriesButton()
 }
+
+///PROMPTS
 
 function appendMoodPromptOptions() {
   promptDiv.innerHTML = `  
   <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
   <br>
     `
+  addMoodPromptButtons()
 }
 
 function addMoodPromptButtons() {
@@ -66,6 +69,8 @@ function randomPrompt(e) {
   renderNewEntryForm(randomPrompt)
 }
 
+///NEW ENTRY
+
 function renderNewEntryForm(randomPrompt) {
   promptDiv.innerHTML = `
     <h4 id="prompt">${randomPrompt.question}</h4>
@@ -87,7 +92,6 @@ function renderNewEntryForm(randomPrompt) {
   addEntryFormListener()
   startTimer()
 }
-
 
 function startTimer() {
   timer = document.getElementById("timer")
@@ -134,7 +138,114 @@ function createEntry(e) {
     })
   // .catch(alert)
 }
-// MOOD
+
+// GET ENTRIES
+
+function pastEntriesButton() {
+  journalEntriesDiv.innerHTML = `
+    <br>
+    <a class="waves-effect waves-light btn-large center-align" id="get-past-entries">Read Past Journal Entries</a>
+    `
+  attachPastEntriesListener()
+}
+
+function attachPastEntriesListener() {
+  let getPastEntries = document.getElementById("get-past-entries")
+  getPastEntries.addEventListener("click", appendEntriesDivs)
+}
+
+function appendEntriesDivs() {
+  journalEntriesDiv.innerHTML = `
+    <h5>Journal Entries:</h5>
+    <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
+    <ul id='dropdown1' class='dropdown-content'>
+    `
+  addDropdownOptions()
+}
+
+function addDropdownOptions() {
+  const dropdownOptions = document.getElementById("dropdown1")
+  dropdownOptions.insertAdjacentHTML('afterbegin', `
+      <li><a href="#!" id="all">All Entries</a></li>
+      `)
+  Mood.all.forEach(mood => {
+    dropdownOptions.insertAdjacentHTML('beforeend', `
+      <li class="divider" tabindex="-1"></li>
+      <li><a href="#!" id="${mood.id}">${mood.mood_type}</a></li>
+      ` )
+  })
+  getEntries()
+  attachMoodListener()
+  $('.dropdown-trigger').dropdown()
+}
+
+function getEntries() {
+  entriesTitle.innerHTML = ""
+  sortEntries(Entry.all)
+  renderEntries(Entry.all)
+}
+
+function sortEntries(entries) {
+  entries.sort(function (a, b) {
+    let keyA = new Date(a.created_at),
+      keyB = new Date(b.updated_at)
+    if (keyA < keyB) return -1
+    if (keyA > keyB) return 1
+    return 0
+  })
+}
+
+function renderEntries(entries) { /// working on this
+  entriesDiv.innerHTML = ""
+  if (entries.length > 0) {
+    entries.forEach(entry => renderEntryCard(entry))
+  } else {
+    entriesDiv.innerHTML = "You don't have any entries."
+  }
+}
+
+function renderEntryCard(entry) {
+  entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
+  addDeleteButtonListeners()
+}
+
+function addDeleteButtonListeners() {
+  let deleteButtons = document.querySelectorAll(".delete-div button")
+  for (let i = 0; i < deleteButtons.length; i++) {
+    deleteButtons[i].addEventListener("click", deleteEntry)
+  }
+}
+
+function deleteEntry(e) {
+  e.preventDefault
+  if (window.confirm("Are you sure you want to delete this entry?")) {
+    fetch(`http://localhost:3000/entries/${e.target.id}`, {
+      method: "DELETE",
+    })
+      .then(resp => resp.json())
+      .then(responseJSON => {
+        if (responseJSON.message) {
+          alert(responseJSON.message)
+          deleteEntryFromAll(e.target.id) // model function to delete entry on js models all
+          appendEntriesDivs()
+        } else {
+          throw new Error(responseJSON.errors)
+        }
+      })
+      .catch(alert)
+  }
+}
+
+function deleteEntryFromAll(id) {
+  for (let i = 0; i < Entry.all.length; i++) {
+    if (Entry.all[i].id === parseInt(id)) {
+      Entry.all.splice(i, 1); i--
+    }
+  }
+}
+
+
+// GET ENTRIES BY MOOD
 
 
 function attachMoodListener() {
@@ -147,127 +258,17 @@ function getEntriesByMood(e) {
   if (e.target.id === "all") {
     getEntries()
   } else {
+    let mood = Mood.all.find(mood => mood.id === parseInt(e.target.id))
     let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id))
+    entriesTitle.innerHTML = `<h5>Entries that you felt ${mood.mood_type}:</h5>`
     if (entries.length > 0) {
-      entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].mood.mood_type}</h5>`
       sortEntries(entries)
       renderEntries(entries)
     } else {
-      entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${entries[0].mood.mood_type} category.</h6>`
+      entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${mood.mood_type} category.</h6>`
     }
   }
 }
-
-// // ENTERIES
-
-// function createEntries(moods) {
-//   moods.forEach(mood => mood.entries.forEach(entry => new Entry(entry)))
-//   pastEntriesButton()
-// }
-
-// function pastEntriesButton() {
-//   journalEntriesDiv.innerHTML = `
-//   <br>
-//   <a class="waves-effect waves-light btn-large center-align" id="get-past-entries">Read Past Journal Entries</a>
-//   `
-//   attachPastEntriesListener()
-// }
-
-// function attachPastEntriesListener() {
-//   let getPastEntries = document.getElementById("get-past-entries")
-//   getPastEntries.addEventListener("click", appendEntriesDivs)
-// }
-
-// function appendEntriesDivs() {
-//   journalEntriesDiv.innerHTML = `
-//   <h5>Journal Entries:</h5>
-//   <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
-//   <ul id='dropdown1' class='dropdown-content'>
-//   `
-//   addDropdownOptions()
-// }
-
-// function addDropdownOptions() {
-//   const dropdownOptions = document.getElementById("dropdown1")
-//   dropdownOptions.insertAdjacentHTML('afterbegin', `
-//     <li><a href="#!" id="all">All Entries</a></li>
-//     `)
-//   Mood.all.forEach(mood => {
-//     dropdownOptions.insertAdjacentHTML('beforeend', `
-//     <li class="divider" tabindex="-1"></li>
-//     <li><a href="#!" id="${mood.id}">${mood.mood_type}</a></li>
-//     ` )
-//   })
-//   getEntries()
-//   attachMoodListener()
-//   $('.dropdown-trigger').dropdown()
-// }
-
-// function getEntries() {
-//   entriesTitle.innerHTML = ""
-//   sortEntries(Entry.all)
-//   renderEntries(Entry.all)
-// }
-
-// function sortEntries(entries) {
-//   entries.sort(function (a, b) {
-//     let keyA = new Date(a.created_at),
-//       keyB = new Date(b.updated_at)
-//     if (keyA < keyB) return -1
-//     if (keyA > keyB) return 1
-//     return 0
-//   })
-// }
-
-// function renderEntries(entries) { /// working on this
-//   entriesDiv.innerHTML = ""
-//   if (entries.length > 0) {
-//     entries.forEach(entry => renderEntryCard(entry))
-//   } else {
-//     entriesDiv.innerHTML = "You don't have any entries."
-//   }
-// }
-
-// function renderEntryCard(entry) {
-//   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
-//   addDeleteButtonListeners()
-// }
-
-// function addDeleteButtonListeners() {
-//   let deleteButtons = document.querySelectorAll(".delete-div button")
-//   for (let i = 0; i < deleteButtons.length; i++) {
-//     deleteButtons[i].addEventListener("click", deleteEntry)
-//   }
-// }
-
-// function deleteEntry(e) {
-//   e.preventDefault
-//   if (window.confirm("Are you sure you want to delete this entry?")) {
-//     fetch(`http://localhost:3000/entries/${e.target.id}`, {
-//       method: "DELETE",
-//     })
-//       .then(resp => resp.json())
-//       .then(responseJSON => {
-//         if (responseJSON.message) {
-//           alert(responseJSON.message)
-//           deleteFromAllEntries(e.target.id)
-//           appendEntriesDivs()
-//         } else {
-//           throw new Error(responseJSON.errors)
-//         }
-//       })
-//       .catch(alert)
-//   }
-// }
-
-// function deleteFromAllEntries(id) {
-//   for (let i = 0; i < Entry.all.length; i++) {
-//     if (Entry.all[i].id === parseInt(id)) {
-//       Entry.all.splice(i, 1); i--
-//     }
-//   }
-// }
-
 
 // RANDOM ARRAY FUNCTION
 
