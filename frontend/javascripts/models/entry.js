@@ -43,4 +43,5 @@ class Entry {
   findMood(data) {
     return this.findPrompt(data).mood
   }
+
 }
