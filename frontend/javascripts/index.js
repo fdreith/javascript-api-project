@@ -91,12 +91,6 @@ function getEntriesByMood(e) {
   if (e.target.id === "all") {
     getEntries()
   } else {
-    // let mood = Mood.all.find(mood => mood.id === parseInt(e.target.id))
-    // if (mood.entries.length > 0) {
-    //   sortEntries(mood.entries)
-    //   renderEntries(mood.entries)
-    // } else {
-    //   entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${mood.mood_type} category.</h6>`
     fetch(`http://localhost:3000/moods/${e.target.id}`)
       .then(function (response) {
         if (response.status !== 200) {
