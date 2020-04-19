@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
   # GET /entries
   def index
     @entries = Entry.all
-    render json: @entries, include: :prompt, except: :prompt_id
+    render json: @entries
   end
 
   # GET /entries/1
@@ -37,7 +37,7 @@ class EntriesController < ApplicationController
     if @entry.destroy
       render json: {message: "Entry Destroyed."}, status: :ok
     else
-      render json: {message: "Entry Failed To Destroy."}, status: :unprocessable_entity
+      render json: {errors: "Entry Failed To Destroy."}, status: :unprocessable_entity
     end
   end
 

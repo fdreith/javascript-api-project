@@ -4,12 +4,18 @@ class Prompt {
   constructor(data) {
     this.id = data.id
     this.question = data.question
-    this.mood = data.mood
+    this.mood = this.findMood(data)
     this.save()
   }
 
   save() {
-    Prompt.all.push(this)
+    if (!!!Prompt.all.find(prompt => prompt.id === this.id)) {
+      Prompt.all.push(this)
+    }
+  }
+
+  findMood(data) {
+    return Mood.all.find(mood => mood.id === data.mood_id)
   }
 
 }

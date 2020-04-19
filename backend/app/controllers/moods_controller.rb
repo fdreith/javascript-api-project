@@ -4,13 +4,12 @@ class MoodsController < ApplicationController
   # GET /moods
   def index
     @moods = Mood.all
-
-    render json: @moods, include: [:prompts, :entries]
+    render json: @moods
   end
 
   # GET /moods/1
   def show
-    render json: @mood, include: [:prompts, :entries]
+    render json: @mood
   end
 
   # POST /moods

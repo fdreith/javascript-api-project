@@ -1,20 +1,13 @@
-document.addEventListener("DOMContentLoaded", init)
+document.addEventListener("DOMContentLoaded", getMoods)
 
 const promptDiv = document.getElementById("prompt-div")
 const entriesDiv = document.getElementById("entries-div")
 const journalEntriesDiv = document.getElementById("journal-entries")
+const entriesTitle = document.getElementById("entries-title")
 let timer
 
-function init() {
-  getPrompts()
-  getMoods()
-  pastEntriesButton()
-}
-
-// PROMPTS
-
-function getPrompts() {
-  fetch('http://localhost:3000/prompts/')
+function getMoods() {
+  fetch('http://localhost:3000/moods/')
     .then(function (response) {
       if (response.status !== 200) {
         throw new Error(response.statusText)
@@ -22,30 +15,39 @@ function getPrompts() {
       return response.json()
     })
     .then(function (data) {
-      data.map(prompt => new Prompt(prompt))
-
+      let moods = data.map(mood => new Mood(mood))
+      createPrompts(moods)
+      appendMoodPromptOptions()
     })
     .catch(alert)
 }
 
-function appendPromptOptions(moods) {
-  promptDiv.innerHTML = `  
-    <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
-    <br>
-    `
-  addPromptButtons(moods)
+function createPrompts(moods) {
+  let prompts = moods.map(mood => mood.prompts).flat(1)
+  prompts.forEach(prompt => new Prompt(prompt))
+  createEntries()
 }
 
-function addPromptButtons(moods) {
-  if (!!moods) {
-    moods.forEach(mood => {
-      promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
-    })
-  } else {
-    Mood.all.forEach(mood => {
-      promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
-    })
-  }
+function createEntries() {
+  let entries = Mood.all.map(mood => mood.entries).flat(1)
+  entries.forEach(entry => new Entry(entry))
+  pastEntriesButton()
+}
+
+///PROMPTS
+
+function appendMoodPromptOptions() {
+  promptDiv.innerHTML = `  
+  <h6 class="center-align">How are you feeling today? Select an emotion for a writing prompt.</h6>
+  <br>
+    `
+  addMoodPromptButtons()
+}
+
+function addMoodPromptButtons() {
+  Mood.all.forEach(mood => {
+    promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
+  })
   addPromptListeners()
 }
 
@@ -63,200 +65,35 @@ function randomPrompt(e) {
   renderNewEntryForm(randomPrompt)
 }
 
-// MOOD
-
-function getMoods() {
-  let moods
-  fetch('http://localhost:3000/moods/')
-    .then(function (response) {
-      if (response.status !== 200) {
-        throw new Error(response.statusText)
-      }
-      return response.json()
-    })
-    .then(function (data) {
-      moods = data.map(mood => new Mood(mood))
-      appendPromptOptions(moods)
-    })
-    .catch(alert)
-}
-
-function attachMoodListener() {
-  const dropdownOptions = document.getElementById("dropdown1")
-  dropdownOptions.addEventListener("click", getEntriesByMood)
-}
-
-function getEntriesByMood(e) {
-  e.preventDefault
-  if (e.target.id === "all") {
-    getEntries()
-  } else {
-    fetch(`http://localhost:3000/moods/${e.target.id}`)
-      .then(function (response) {
-        if (response.status !== 200) {
-          throw new Error(response.statusText)
-        }
-        return response.json()
-      })
-      .then(function (data) {
-        let entries = data.entries.map(entry => new Entry(entry))
-        sortEntries(entries)
-        renderEntries(entries)
-
-      })
-      .catch(alert)
-
-  }
-
-}
-
-// ENTERIES
-
-function pastEntriesButton() {
-  journalEntriesDiv.innerHTML = `
-  <br>
-  <a class="waves-effect waves-light btn-large center-align" id="get-past-entries">Read Past Journal Entries</a>
-  `
-  attachPastEntriesListener()
-}
-
-function attachPastEntriesListener() {
-  let getPastEntries = document.getElementById("get-past-entries")
-  getPastEntries.addEventListener("click", handlePastEntriesButton)
-}
-function handlePastEntriesButton(e) {
-  e.preventDefault
-  appendEntriesDivs()
-}
-
-function appendEntriesDivs() {
-  journalEntriesDiv.innerHTML = `
-  <h5>Journal Entries:</h5>
-  <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
-  <ul id='dropdown1' class='dropdown-content'>
-  `
-  addDropdownOptions()
-}
-
-function addDropdownOptions() {
-  const dropdownOptions = document.getElementById("dropdown1")
-  dropdownOptions.insertAdjacentHTML('afterbegin', `
-    <li><a href="#!" id="all">All Entries</a></li>
-    `)
-  Mood.all.forEach(mood => {
-    dropdownOptions.insertAdjacentHTML('beforeend', `
-    <li class="divider" tabindex="-1"></li>
-    <li><a href="#!" id="${mood.id}">${mood.mood_type}</a></li>
-    ` )
-  })
-  getEntries()
-  attachMoodListener()
-  $('.dropdown-trigger').dropdown()
-}
-
-function getEntries() {
-  fetch(`http://localhost:3000/entries`)
-    .then(function (response) {
-      if (response.status !== 200) {
-        throw new Error(response.statusText)
-      }
-      return response.json()
-    })
-    .then(function (data) {
-      let entries = data.map(entry => new Entry(entry))
-      sortEntries(entries)
-      renderEntries(entries)
-    })
-    .catch(alert)
-}
-
-function sortEntries(entries) {
-  entries.sort(function (a, b) {
-    let keyA = new Date(a.created_at),
-      keyB = new Date(b.updated_at)
-    if (keyA < keyB) return -1
-    if (keyA > keyB) return 1
-    return 0
-  })
-}
-
-function renderEntries(entries) {
-  let entriesTitle = document.getElementById("entries-title")
-  entriesDiv.innerHTML = ""
-  if (entries.length > 0) {
-    if (entries.every(entry => entry.prompt.mood_id === entries[0].prompt.mood_id)) {
-      entriesTitle.innerHTML = `<h5>Entries by Mood: ${entries[0].prompt.mood.mood_type}</h5>`
-      entries.forEach(entry => renderEntryCard(entry))
-      addDeleteButtonListeners()
-
-    } else {
-      entriesTitle.innerHTML = ""
-      entries.forEach(entry => renderEntryCard(entry))
-      addDeleteButtonListeners()
-    }
-  } else {
-    entriesDiv.innerHTML = "You don't have any entries for this mood."
-  }
-}
-
-function renderEntryCard(entry) {
-  entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
-}
-
-function addDeleteButtonListeners() {
-  let deleteButtons = document.querySelectorAll(".delete-div button")
-  for (let i = 0; i < deleteButtons.length; i++) {
-    deleteButtons[i].addEventListener("click", deleteEntry)
-  }
-}
-
-function deleteEntry(e) {
-  e.preventDefault
-  if (window.confirm("Are you sure you want to delete this entry?")) {
-    fetch(`http://localhost:3000/entries/${e.target.id}`, {
-      method: "DELETE",
-    })
-      .then(resp => resp.json())
-      .then(responseJSON => {
-        if (responseJSON.message) {
-          alert(responseJSON.message)
-          appendEntriesDivs()
-        } else {
-          throw new Error(responseJSON.errors)
-        }
-      })
-      .catch(alert)
-  }
-}
+///NEW ENTRY
 
 function renderNewEntryForm(randomPrompt) {
   promptDiv.innerHTML = `
-  <h4 id="prompt">${randomPrompt.question}</h4>
-  <p>Minutes:</p>
-  <p id="timer"> 0 </p> 
-  <div id="prompt-form" class="row">
-    <form class="prompt-form" id="new-entry-form">
-      <div class="row">
-        <div class="input-field prompt-form">
-          <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
-          <label for="textarea1">Journal Entry</label>
-          <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
-          <input type="submit" name="" value="Finished with Entry">
+    <h4 id="prompt">${randomPrompt.question}</h4>
+    <p>Minutes:</p>
+    <p id="timer"> 0 </p> 
+    <div id="prompt-form" class="row">
+      <form class="prompt-form" id="new-entry-form">
+        <div class="row">
+          <div class="input-field prompt-form">
+            <textarea id="content" class="materialize-textarea" name="content" value=""></textarea>
+            <label for="textarea1">Journal Entry</label>
+            <input type="hidden" id="prompt-id" name="prompt-id" value=${randomPrompt.id}>
+            <input type="submit" name="" value="Finished with Entry">
+          </div>
         </div>
-      </div>
-    </form>
-  </div>
-  `
+      </form>
+    </div>
+    `
   addEntryFormListener()
   startTimer()
 }
 
-
 function startTimer() {
   timer = document.getElementById("timer")
-  let time = setInterval(function () {
+  setInterval(function () {
     timer.innerText++
-  }, 6000)
+  }, 60000)
 }
 
 function addEntryFormListener() {
@@ -276,6 +113,7 @@ function createEntry(e) {
       minutes
     }
   }
+
   fetch('http://localhost:3000/entries/', {
     method: "POST",
     headers: {
@@ -289,13 +127,142 @@ function createEntry(e) {
       if (responseJSON.errors) {
         throw new Error(responseJSON.errors)
       } else {
-        appendPromptOptions()
+        new Entry(responseJSON)
         appendEntriesDivs()
+        appendMoodPromptOptions()
       }
     })
     .catch(alert)
 }
 
+// GET ENTRIES
+
+function pastEntriesButton() {
+  journalEntriesDiv.innerHTML = `
+    <br>
+    <a class="waves-effect waves-light btn-large center-align" id="get-past-entries">Read Past Journal Entries</a>
+    `
+  attachPastEntriesListener()
+}
+
+function attachPastEntriesListener() {
+  let getPastEntries = document.getElementById("get-past-entries")
+  getPastEntries.addEventListener("click", appendEntriesDivs)
+}
+
+function appendEntriesDivs() {
+  journalEntriesDiv.innerHTML = `
+    <h5>Journal Entries:</h5>
+    <a id="filter-dropdown" class='dropdown-trigger btn' href='#' data-target='dropdown1'>View Entries By Mood</a>
+    <ul id='dropdown1' class='dropdown-content'>
+    `
+  addDropdownOptions()
+}
+
+function addDropdownOptions() {
+  const dropdownOptions = document.getElementById("dropdown1")
+  dropdownOptions.insertAdjacentHTML('afterbegin', `
+      <li><a href="#!" id="all">All Entries</a></li>
+      `)
+  Mood.all.forEach(mood => {
+    dropdownOptions.insertAdjacentHTML('beforeend', `
+      <li class="divider" tabindex="-1"></li>
+      <li><a href="#!" id="${mood.id}">${mood.mood_type}</a></li>
+      ` )
+  })
+  getEntries()
+  attachMoodListener()
+  $('.dropdown-trigger').dropdown()
+}
+
+function getEntries() {
+  entriesTitle.innerHTML = ""
+  sortEntries(Entry.all)
+  renderEntries(Entry.all)
+}
+
+function sortEntries(entries) {
+  entries.sort(function (a, b) {
+    let keyA = new Date(a.created_at),
+      keyB = new Date(b.updated_at)
+    if (keyA < keyB) return -1
+    if (keyA > keyB) return 1
+    return 0
+  })
+}
+
+function renderEntries(entries) {
+  entriesDiv.innerHTML = ""
+  if (entries.length > 0) {
+    entries.forEach(entry => renderEntryCard(entry))
+  } else {
+    entriesDiv.innerHTML = "You don't have any entries."
+  }
+}
+
+function renderEntryCard(entry) {
+  entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
+  addDeleteButtonListeners()
+}
+
+function addDeleteButtonListeners() {
+  let deleteButtons = document.querySelectorAll(".delete-div button")
+  for (let i = 0; i < deleteButtons.length; i++) {
+    deleteButtons[i].addEventListener("click", deleteEntry)
+  }
+}
+
+function deleteEntry(e) {
+  e.preventDefault
+  if (window.confirm("Are you sure you want to delete this entry?")) {
+    fetch(`http://localhost:3000/entries/${e.target.id}`, {
+      method: "DELETE",
+    })
+      .then(resp => resp.json())
+      .then(responseJSON => {
+        if (responseJSON.message) {
+          alert(responseJSON.message)
+          deleteEntryFromAll(e.target.id)
+          appendEntriesDivs()
+        } else {
+          throw new Error(responseJSON.errors)
+        }
+      })
+      .catch(alert)
+  }
+}
+
+function deleteEntryFromAll(id) {
+  for (let i = 0; i < Entry.all.length; i++) {
+    if (Entry.all[i].id === parseInt(id)) {
+      Entry.all.splice(i, 1); i--
+    }
+  }
+}
+
+// GET ENTRIES BY MOOD
+
+function attachMoodListener() {
+  const dropdownOptions = document.getElementById("dropdown1")
+  dropdownOptions.addEventListener("click", getEntriesByMood)
+}
+
+function getEntriesByMood(e) {
+  e.preventDefault
+  if (e.target.id === "all") {
+    getEntries()
+  } else {
+    let mood = Mood.all.find(mood => mood.id === parseInt(e.target.id))
+    let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id))
+    entriesTitle.innerHTML = `<h5>Entries that you felt ${mood.mood_type}:</h5>`
+    if (entries.length > 0) {
+      sortEntries(entries)
+      renderEntries(entries)
+    } else {
+      entriesDiv.innerHTML = `<h6>You don't have any journal entries in the ${mood.mood_type} category.</h6>`
+    }
+  }
+}
 
 // RANDOM ARRAY FUNCTION
 
