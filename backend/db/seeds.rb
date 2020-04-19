@@ -12,6 +12,7 @@ anxious = Mood.create( mood_type: "Anxious")
 sad = Mood.create( mood_type: "Sad/Depressed")
 reflect = Mood.create( mood_type: "Self-Reflective")
 esteem = Mood.create( mood_type: "Low Self-Esteem")
+creative = Mood.create(mood_type: "Creative")
 
 inspired_prompts = inspired.prompts.create([
   {question: "Write about someone who ispires you, and what it is about them that inspires you."},
@@ -107,12 +108,27 @@ esteem_prompts = esteem.prompts.create([
   {question: "Make a list of the people in your life who genuinely support you, and who you can genuinely trust. (Then make time to hang out with them.)"}
 ])
 
+creative_prompts = creative.prompts.create([
+  {question: "Write a story that keeps contradicting itself."},
+  {question: "Describe exactly what you see/smell/hear/etc, right now. Include objects, people, and anything else in your immediate environment."},
+  {question: "Write a scene starting with a regular family ritual that goes awry."},
+  {question: "If your brain were a tangible, physical place, what would it be like?"},
+  {question: "Write a sympathetic story from the point of view of the 'bad guy'. (Think fractured fairy tales like Wicked or The True Story of the 3 Little Pigs!, although the story doesn't have to be a fairy tale.)"},
+  {question: "Look at everyday objects in a new way and write about the stories one of these objects contains."},
+  {question: "Write a recipe for an intangible thing."},
+  {question: "Write a horror story about an ordinary situation (e.g., buying groceries, going to the bank, listening to music)."},
+  {question: "Write down a paragraph each describing two wildly different settings. Write a story involving both settings."},
+  {question: "Write a story as a dream."},
+  {question: "Write a chapter of the memoir of your life."}
+])
+
 Entry.create(content: "My mom inspires me.", minutes: "1", prompt_id: inspired_prompts.first.id)
 Entry.create(content: "1: Breakfast, 2:Decent communte, 3: Made my deadline, 4: Got to see my best friend.", minutes: "1", prompt_id: happy_prompts.first.id)
 Entry.create(content: "When my friend died it gave me perspect on....", minutes: "1", prompt_id: anxious_prompts.first.id)
 Entry.create(content: "My neighbor helped me weed the garden.", minutes: "1", prompt_id: sad_prompts.first.id)
 Entry.create(content: "What makes anyone unique?", minutes: "1", prompt_id: esteem_prompts.first.id)
 Entry.create(content: "Such and such project I did for the community.", minutes: "1", prompt_id: reflect_prompts.first.id)
+Entry.create(content: "I hate everything around me, it's all just so lovely.", minutes: "1", prompt_id: creative_prompts.first.id)
 
 
 
