@@ -44,7 +44,7 @@ function appendMoodPromptOptions() {
   addMoodPromptButtons()
 }
 
-function addMoodPromptButtons() { // could be a class method
+function addMoodPromptButtons() {
   Mood.all.forEach(mood => {
     promptDiv.insertAdjacentHTML('beforeend', ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`)
   })
@@ -164,7 +164,7 @@ function addDropdownOptions() {
   dropdownOptions.insertAdjacentHTML('afterbegin', `
       <li><a href="#!" id="all">All Entries</a></li>
       `)
-  Mood.all.forEach(mood => { // could be a class method
+  Mood.all.forEach(mood => {
     dropdownOptions.insertAdjacentHTML('beforeend', `
       <li class="divider" tabindex="-1"></li>
       <li><a href="#!" id="${mood.id}">${mood.mood_type}</a></li>
@@ -253,7 +253,7 @@ function getEntriesByMood(e) {
     getEntries()
   } else {
     let mood = Mood.all.find(mood => mood.id === parseInt(e.target.id))
-    let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id)) // this could be a class method
+    let entries = Entry.all.filter(entry => entry.mood.id === parseInt(e.target.id))
     entriesTitle.innerHTML = `<h5>Entries that you felt ${mood.mood_type}:</h5>`
     if (entries.length > 0) {
       sortEntries(entries)
