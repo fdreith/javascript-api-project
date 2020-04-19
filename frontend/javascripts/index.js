@@ -203,12 +203,40 @@ function renderEntries(entries) {
 function renderEntryCard(entry) {
   entriesDiv.insertAdjacentHTML('afterbegin', entry.renderEntry())
   addDeleteButtonListeners()
+  addContentListeners()
 }
 
 function addDeleteButtonListeners() {
-  let deleteButtons = document.querySelectorAll(".delete-div button")
+  const deleteButtons = document.querySelectorAll(".delete-div button")
   for (let i = 0; i < deleteButtons.length; i++) {
     deleteButtons[i].addEventListener("click", deleteEntry)
+  }
+}
+
+function addContentListeners() {
+  const cardContent = document.querySelectorAll(".card-content")
+  for (let i = 0; i < cardContent.length; i++) {
+    cardContent[i].addEventListener("mouseenter", expandEntry)
+    cardContent[i].addEventListener("mouseleave", unexpandEntry)
+  }
+}
+
+function expandEntry(e) {
+  e.preventDefault
+  const content = e.target.querySelector(".hide")
+  if (content.className === "hide") {
+    content.className = "unhidden"
+  } else {
+    content.className = "hide"
+  }
+}
+function unexpandEntry(e) {
+  e.preventDefault
+  const content = e.target.querySelector(".unhidden")
+  if (content.className === "unhidden") {
+    content.className = "hide"
+  } else {
+    content.className = "unhidden"
   }
 }
 

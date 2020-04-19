@@ -30,7 +30,7 @@ class Entry {
         <br>
         <strong> ${this.prompt.question}</strong>
         <br><br>
-        <p>${this.content}</p>
+        <p class="hide">${this.content}</p>
       </div>
     </div>
     `
