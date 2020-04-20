@@ -128,7 +128,7 @@ function createEntry(e) {
         throw new Error(responseJSON.errors)
       } else {
         new Entry(responseJSON)
-        appendEntriesDivs()
+        getEntries()
         appendMoodPromptOptions()
       }
     })
@@ -146,7 +146,7 @@ function pastEntriesButton() {
 }
 
 function attachPastEntriesListener() {
-  let getPastEntries = document.getElementById("get-past-entries")
+  const getPastEntries = document.getElementById("get-past-entries")
   getPastEntries.addEventListener("click", appendEntriesDivs)
 }
 
