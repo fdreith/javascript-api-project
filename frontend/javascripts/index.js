@@ -128,7 +128,7 @@ function createEntry(e) {
         throw new Error(responseJSON.errors)
       } else {
         new Entry(responseJSON)
-        getEntries()
+        appendEntriesDivs()
         appendMoodPromptOptions()
       }
     })
