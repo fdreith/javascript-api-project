@@ -5,6 +5,7 @@ const entriesDiv = document.getElementById("entries-div")
 const journalEntriesDiv = document.getElementById("journal-entries")
 const entriesTitle = document.getElementById("entries-title")
 let timer
+let interval
 
 function getMoods() {
   fetch('http://localhost:3000/moods/')
@@ -91,7 +92,7 @@ function renderNewEntryForm(randomPrompt) {
 
 function startTimer() {
   timer = document.getElementById("timer")
-  setInterval(function () {
+  interval = setInterval(function () {
     timer.innerText++
   }, 60000)
 }
@@ -130,6 +131,7 @@ function createEntry(e) {
         new Entry(responseJSON)
         appendEntriesDivs()
         appendMoodPromptOptions()
+        clearInterval(interval)
       }
     })
     .catch(alert)
