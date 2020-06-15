@@ -4,11 +4,12 @@ Mindful Journal helps you keep track with a journaling goal by giving you writin
 
 #Installation
 1. Download or clone this repository
-2. cd into the 'javascript-api-project' directory
+2. cd into the 'javascript-api-project/backend' directory
 3. Run 'bundle install' in your console
 4. Run 'rake db:migrate'
 5. Run 'rake db:seed'
-6. Run index.html in your browser
+6. Run 'rails s'
+7. Run index.html from 'javascript-api-project/frontend' in your browser
 
 #License
 Copyright 2020, Francesca Dreith
