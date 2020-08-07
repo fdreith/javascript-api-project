@@ -1,18 +1,18 @@
 class Entry {
-  static all = []
+  // static all = []
 
   constructor(data) {
-    this.id = data.id
-    this.prompt = this.findPrompt(data)
-    this.mood = this.findMood(data)
-    this.minutes = data.minutes
-    this.content = data.content
-    this.created_at = new Date(data.created_at)
-    this.save()
+    this.id = data.id;
+    this.prompt = this.findPrompt(data);
+    this.mood = this.findMood(data);
+    this.minutes = data.minutes;
+    this.content = data.content;
+    this.created_at = new Date(data.created_at);
+    this.save();
   }
 
   save() {
-    Entry.all.push(this)
+    allEntries.push(this);
   }
 
   renderEntry() {
@@ -33,15 +33,14 @@ class Entry {
         <p class="hide">${this.content}</p>
       </div>
     </div>
-    `
+    `;
   }
 
   findPrompt(data) {
-    return Prompt.all.find(prompt => prompt.id === data.prompt_id)
+    return allPrompts.find((prompt) => prompt.id === data.prompt_id);
   }
 
   findMood(data) {
-    return this.findPrompt(data).mood
+    return this.findPrompt(data).mood;
   }
-
 }
