@@ -6,9 +6,46 @@ const journalEntriesDiv = document.getElementById("journal-entries");
 const entriesTitle = document.getElementById("entries-title");
 let timer;
 let interval;
-allMoods = [];
-allEntries = [];
-allPrompts = [];
+
+const MOODS = (function () {
+  const totalMoods = [];
+  return {
+    save: function (mood) {
+      if (!!!MOODS.all().find((mood) => mood.id === this.id)) {
+        return totalMoods.push(mood);
+      }
+    },
+    all: function () {
+      return totalMoods;
+    },
+  };
+})();
+
+const PROMPTS = (function () {
+  const totalPrompts = [];
+  return {
+    save: function (prompt) {
+      if (!!!PROMPTS.all().find((prompt) => prompt.id === this.id)) {
+        totalPrompts.push(prompt);
+      }
+    },
+    all: function () {
+      return totalPrompts;
+    },
+  };
+})();
+
+const ENTRIES = (function () {
+  const totalEntries = [];
+  return {
+    save: function (entry) {
+      return totalEntries.push(entry);
+    },
+    all: function () {
+      return totalEntries;
+    },
+  };
+})();
 
 function getMoods() {
   fetch("http://localhost:3000/moods/")
@@ -22,18 +59,22 @@ function getMoods() {
       let moods = data.map((mood) => new Mood(mood));
       createPrompts(moods);
       appendMoodPromptOptions();
-    });
-  // .catch(alert);
+    })
+    .catch(alert);
 }
 
 function createPrompts(moods) {
-  let prompts = moods.map((mood) => mood.prompts).flat(1);
+  let prompts = MOODS.all()
+    .map((mood) => mood.prompts)
+    .flat(1);
   prompts.forEach((prompt) => new Prompt(prompt));
   createEntries();
 }
 
 function createEntries() {
-  let entries = allMoods.map((mood) => mood.entries).flat(1);
+  let entries = MOODS.all()
+    .map((mood) => mood.entries)
+    .flat(1);
   entries.forEach((entry) => new Entry(entry));
   pastEntriesButton();
 }
@@ -49,7 +90,7 @@ function appendMoodPromptOptions() {
 }
 
 function addMoodPromptButtons() {
-  allMoods.forEach((mood) => {
+  MOODS.all().forEach((mood) => {
     promptDiv.insertAdjacentHTML(
       "beforeend",
       ` <a class="waves-effect waves-light btn-large" id="${mood.id}">${mood.mood_type}</a>`
@@ -67,7 +108,7 @@ function addPromptListeners() {
 
 function randomPrompt(e) {
   e.preventDefault();
-  let targetPrompts = allPrompts.filter(
+  let targetPrompts = PROMPTS.all().filter(
     (prompt) => prompt.mood.id === parseInt(e.target.id)
   );
   let randomPrompt = targetPrompts.random();
@@ -141,8 +182,8 @@ function createEntry(e) {
         appendMoodPromptOptions();
         clearInterval(interval);
       }
-    });
-  // .catch(alert);
+    })
+    .catch(alert);
 }
 
 // GET ENTRIES
@@ -177,7 +218,7 @@ function addDropdownOptions() {
       <li><a href="#!" id="all">All Entries</a></li>
       `
   );
-  allMoods.forEach((mood) => {
+  MOODS.all().forEach((mood) => {
     dropdownOptions.insertAdjacentHTML(
       "beforeend",
       `
@@ -193,8 +234,8 @@ function addDropdownOptions() {
 
 function getEntries() {
   entriesTitle.innerHTML = "";
-  sortEntries(allEntries);
-  renderEntries(allEntries);
+  sortEntries(ENTRIES.all());
+  renderEntries(ENTRIES.all());
 }
 
 function sortEntries(entries) {
@@ -277,9 +318,9 @@ function deleteEntry(e) {
 }
 
 function deleteEntryFromAll(id) {
-  for (let i = 0; i < allEntries.length; i++) {
-    if (allEntries[i].id === parseInt(id)) {
-      allEntries.splice(i, 1);
+  for (let i = 0; i < ENTRIES.all().length; i++) {
+    if (ENTRIES.all()[i].id === parseInt(id)) {
+      ENTRIES.all().splice(i, 1);
       i--;
     }
   }
@@ -297,8 +338,8 @@ function getEntriesByMood(e) {
   if (e.target.id === "all") {
     getEntries();
   } else {
-    let mood = allMoods.find((mood) => mood.id === parseInt(e.target.id));
-    let entries = allEntries.filter(
+    let mood = MOODS.all().find((mood) => mood.id === parseInt(e.target.id));
+    let entries = ENTRIES.all().filter(
       (entry) => entry.mood.id === parseInt(e.target.id)
     );
     entriesTitle.innerHTML = `<h5>Entries that you felt ${mood.mood_type}:</h5>`;
