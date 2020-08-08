@@ -273,27 +273,21 @@ function addDeleteButtonListeners() {
 function addContentListeners() {
   const cardContent = document.querySelectorAll(".card-content");
   for (let i = 0; i < cardContent.length; i++) {
-    cardContent[i].addEventListener("mouseenter", expandEntry);
-    cardContent[i].addEventListener("mouseleave", unexpandEntry);
+    let showContent = false;
+    cardContent[i].addEventListener("click", expandOrCollapse);
   }
 }
 
-function expandEntry(e) {
+function expandOrCollapse(e) {
   e.preventDefault;
-  const content = e.target.querySelector(".hide");
+  const content =
+    e.currentTarget.querySelector(".hide") ||
+    e.currentTarget.querySelector(".unhidden");
+  debugger;
   if (content.className === "hide") {
     content.className = "unhidden";
   } else {
     content.className = "hide";
-  }
-}
-function unexpandEntry(e) {
-  e.preventDefault;
-  const content = e.target.querySelector(".unhidden");
-  if (content.className === "unhidden") {
-    content.className = "hide";
-  } else {
-    content.className = "unhidden";
   }
 }
 
