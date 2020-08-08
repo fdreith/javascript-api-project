@@ -208,7 +208,23 @@ function appendEntriesDivs() {
     <ul id='dropdown1' class='dropdown-content'>
     `;
   addDropdownOptions();
+  popUpModal();
 }
+
+// function popUpModal() {
+//   journalEntriesDiv.innerHTML += `
+//   <div id="modal1" class="modal">
+//     <div class="modal-content">
+//       <h4>Modal Header</h4>
+//       <p>A bunch of text</p>
+//     </div>
+//     <div class="modal-footer">
+//       <a href="#!" class="modal-close waves-effect waves-green btn-flat">
+//         Agree
+//       </a>
+//     </div>
+//   </div>;`;
+// }
 
 function addDropdownOptions() {
   const dropdownOptions = document.getElementById("dropdown1");
@@ -283,7 +299,6 @@ function expandOrCollapse(e) {
   const content =
     e.currentTarget.querySelector(".hide") ||
     e.currentTarget.querySelector(".unhidden");
-  debugger;
   if (content.className === "hide") {
     content.className = "unhidden";
   } else {
