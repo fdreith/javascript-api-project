@@ -241,7 +241,7 @@ function getEntries() {
 function sortEntries(entries) {
   entries.sort(function (a, b) {
     let keyA = new Date(a.created_at),
-      keyB = new Date(b.updated_at);
+      keyB = new Date(b.created_at);
     if (keyA < keyB) return -1;
     if (keyA > keyB) return 1;
     return 0;
